@@ -10,6 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/blur": "^3.6.0",
+    "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.4.0",
     "@reduxjs/toolkit": "^1.7.1",
@@ -37,5 +39,6 @@
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }

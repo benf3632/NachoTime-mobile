@@ -34,26 +34,30 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={[{ width: "100%", height: "100%" }, tw`p-2 bg-gray-800`]}>
+    <View
+      style={[
+        { width: "100%", height: "100%", backgroundColor: "#181826" },
+        tw`p-2`,
+      ]}>
       {currentDetails && (
         <Modal animationType="fade" transparent={true} visible={modalVisible}>
           <View
             style={[
               {
-                backgroundColor: "#393942",
+                backgroundColor: "#181826",
                 elevation: 5,
               },
               tw`flex justify-center items-center m-10`,
             ]}>
             <ScrollView>
-              <WebView
-                style={{ width: 200, height: 100 }}
-                allowsInlineMediaPlayback
-                mediaPlaybackRequiresUserAction
-                source={{
-                  uri: `https://youtube.com/embed/${currentDetails.yt_trailer_code}`,
-                }}
-              />
+              {/* <WebView */}
+              {/*   style={{ width: 200, height: 100 }} */}
+              {/*   allowsInlineMediaPlayback */}
+              {/*   mediaPlaybackRequiresUserAction */}
+              {/*   source={{ */}
+              {/*     uri: `https://youtube.com/embed/${currentDetails.yt_trailer_code}`, */}
+              {/*   }} */}
+              {/* /> */}
               <Button
                 onPress={() => setModalVisibile(false)}
                 title="Close Modal"

@@ -15,13 +15,13 @@ const DetailsCard = ({ onPress, details }) => {
         <Text style={tw`font-bold text-white`}>{details.title_long}</Text>
         <View style={tw`flex flex-row flex-wrap`}>
           <Text style={tw`text-white`}>{details.genres.join(" - ")}</Text>
-          <StarRating
-            disabled
-            rating={(details.rating / 10) * 5}
-            containerStyle={tw`ml-2 w-20`}
-            starStyle={tw`text-sm`}
-            fullStarColor="yellow"
-          />
+          {/* <StarRating */}
+          {/*   disabled */}
+          {/*   rating={(details.rating / 10) * 5} */}
+          {/*   containerStyle={tw`ml-2 w-20`} */}
+          {/*   starStyle={tw`text-sm`} */}
+          {/*   fullStarColor="yellow" */}
+          {/* /> */}
         </View>
         <Text numberOfLines={4} ellipsizeMode="tail" style={tw`text-white`}>
           {details.summary}
