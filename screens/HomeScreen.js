@@ -6,6 +6,7 @@ import {
   FlatList,
   Modal,
   ScrollView,
+  Image,
 } from "react-native";
 import WebView from "react-native-webview";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +14,7 @@ import tw from "tailwind-react-native-classnames";
 
 // components
 import DetailsCard from "../components/DetailsCard";
+import DetailsModal from "../components/DetailsModal";
 
 // actions
 import { incrementPage, setPage, addMovies } from "../slices/moviesSlice";
@@ -34,37 +36,13 @@ const HomeScreen = () => {
   };
 
   return (
-    <View
-      style={[
-        { width: "100%", height: "100%", backgroundColor: "#181826" },
-        tw`p-2`,
-      ]}>
+    <View style={styles.screen}>
       {currentDetails && (
-        <Modal animationType="fade" transparent={true} visible={modalVisible}>
-          <View
-            style={[
-              {
-                backgroundColor: "#181826",
-                elevation: 5,
-              },
-              tw`flex justify-center items-center m-10`,
-            ]}>
-            <ScrollView>
-              {/* <WebView */}
-              {/*   style={{ width: 200, height: 100 }} */}
-              {/*   allowsInlineMediaPlayback */}
-              {/*   mediaPlaybackRequiresUserAction */}
-              {/*   source={{ */}
-              {/*     uri: `https://youtube.com/embed/${currentDetails.yt_trailer_code}`, */}
-              {/*   }} */}
-              {/* /> */}
-              <Button
-                onPress={() => setModalVisibile(false)}
-                title="Close Modal"
-              />
-            </ScrollView>
-          </View>
-        </Modal>
+        <DetailsModal
+          closeModalCallback={() => setModalVisibile(false)}
+          modalVisible={modalVisible}
+          currentDetails={currentDetails}
+        />
       )}
       <FlatList
         data={movies}
@@ -72,7 +50,7 @@ const HomeScreen = () => {
         renderItem={({ item }) => (
           <View style={tw`mt-2 mb-2`}>
             <DetailsCard
-              onPress={handleDetailsCardPressed.bind(item)}
+              onPress={() => handleDetailsCardPressed(item)}
               details={item}
             />
           </View>
@@ -82,6 +60,8 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  screen: { width: "100%", height: "100%", backgroundColor: "#181826" },
+});
 
 export default HomeScreen;

@@ -13,7 +13,6 @@ import { store } from "./store";
 // screens
 import HomeScreen from "./screens/HomeScreen";
 import DetailsScreen from "./screens/DetailsScreen";
-import { BlurView } from "@react-native-community/blur";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +25,7 @@ const HomeScreenStack = () => {
         }}
         name="HomeScreen"
         component={HomeScreen}
-      />
+        />
       <Stack.Screen
         options={{
           headerShown: false,
