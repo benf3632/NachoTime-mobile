@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   StyleSheet,
@@ -7,9 +7,27 @@ import {
   Button,
   ImageBackground,
   Text,
+  TouchableOpacity,
 } from "react-native";
 
-const DetailsModal = ({ currentDetails, modalVisible, closeModalCallback }) => {
+// helpers
+import { fetchShowBackdropURL } from "../helper/tmbd";
+
+// icons
+import Ionicons from "react-native-vector-icons/Ionicons";
+
+const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
+  const [showBackdropURL, setShowBackdropURL] = useState(null);
+
+  const getShowBackdrop = async () => {
+    const backdropURL = await fetchShowBackdropURL(details.imdb_code);
+    setShowBackdropURL(backdropURL);
+  };
+
+  useEffect(() => {
+    getShowBackdrop();
+  }, [details]);
+
   return (
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
       <View
@@ -17,10 +35,6 @@ const DetailsModal = ({ currentDetails, modalVisible, closeModalCallback }) => {
           {
             width: "100%",
             height: "100%",
-            paddingTop: "30%",
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            overflow: "hidden",
           },
         ]}>
         <View
@@ -29,29 +43,29 @@ const DetailsModal = ({ currentDetails, modalVisible, closeModalCallback }) => {
             width: "100%",
             height: "100%",
           }}>
-          <ScrollView>
+          <ScrollView style={styles.showModalScrollView}>
             <ImageBackground
               source={{
-                uri: currentDetails.background_image,
+                uri: showBackdropURL,
               }}
-              style={styles.movieImageBackground}
+              style={styles.showImageBackground}
               resizeMode="stretch">
-              <View style={styles.movieDetailsHeader}>
-                <Text style={styles.movieTitle}>{currentDetails.title}</Text>
-                <View style={styles.movieDataWrapper}>
-                  <Text style={styles.movieDataText}>
-                    {currentDetails.year}
-                  </Text>
-                  <Text style={styles.movieDataText}>
-                    {currentDetails.runtime}
-                  </Text>
-                  <Text style={styles.movieDataText}>
-                    {currentDetails.genres.join(",")}
-                  </Text>
-                </View>
-              </View>
+              <TouchableOpacity onPress={closeModalCallback}>
+                <Ionicons name="arrow-down" size={30} color="black" />
+              </TouchableOpacity>
             </ImageBackground>
-            <Button onPress={closeModalCallback} title="Close Modal" />
+            <View style={styles.showDetailsHeader}>
+              <Text style={styles.showTitle}>{details.title}</Text>
+              <View style={styles.showDataWrapper}>
+                <Text style={styles.showDataText}>{details.year}</Text>
+                <View style={styles.verticalSeperator} />
+                <Text style={styles.showDataText}>{details.runtime} min</Text>
+                <View style={styles.verticalSeperator} />
+                <Text style={styles.showDataText}>
+                  {details.genres.join(", ")}
+                </Text>
+              </View>
+            </View>
           </ScrollView>
         </View>
       </View>
@@ -60,29 +74,42 @@ const DetailsModal = ({ currentDetails, modalVisible, closeModalCallback }) => {
 };
 
 const styles = StyleSheet.create({
-  movieImageBackground: {
-    height: 300,
-    width: "100%",
-  },
-  movieDetailsHeader: {
+  showModalScrollView: {
     width: "100%",
     height: "100%",
+    overflow: "hidden",
+  },
+  showImageBackground: {
+    height: 300,
+    width: "100%",
+    paddingLeft: 10,
+    paddingTop: 10,
+  },
+  showDetailsHeader: {
+    width: "100%",
+    // height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
-  movieTitle: {
+  showTitle: {
     color: "white",
+    fontWeight: "700",
     fontSize: 32,
   },
-  movieDataWrapper: {
+  showDataWrapper: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     flexWrap: "wrap",
     width: "100%",
   },
-  movieDataText: {
+  showDataText: {
     color: "white",
+    fontWeight: "300",
     fontSize: 16,
+  },
+  verticalSeperator: {
+    borderColor: "gray",
+    borderWidth: StyleSheet.hairlineWidth,
   },
 });
 

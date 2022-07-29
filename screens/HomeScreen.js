@@ -41,7 +41,7 @@ const HomeScreen = () => {
         <DetailsModal
           closeModalCallback={() => setModalVisibile(false)}
           modalVisible={modalVisible}
-          currentDetails={currentDetails}
+          details={currentDetails}
         />
       )}
       <FlatList
