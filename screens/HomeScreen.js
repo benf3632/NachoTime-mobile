@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import tw from "tailwind-react-native-classnames";
 
 // components
 import DetailsCard from "../components/DetailsCard";
@@ -16,7 +15,6 @@ import { selectPage, selectMovies } from "../slices/moviesSlice";
 
 // assets
 import nacho from "../assets/nacho.png";
-import SvgUri from "react-native-svg-uri";
 
 const HomeScreen = () => {
   const page = useSelector(selectPage);
@@ -48,7 +46,7 @@ const HomeScreen = () => {
         data={movies}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <View style={tw`mt-2 mb-2`}>
+          <View style={styles.detailsCardContainer}>
             <DetailsCard
               onPress={() => handleDetailsCardPressed(item)}
               details={item}
@@ -74,6 +72,10 @@ const styles = StyleSheet.create({
   appIcon: {
     width: 50,
     height: 50,
+  },
+  detailsCardContainer: {
+    marginTop: 20,
+    marginBottom: 20,
   },
 });
 

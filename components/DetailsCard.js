@@ -1,35 +1,48 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import StarRating from "react-native-star-rating";
-import tw from "tailwind-react-native-classnames";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import colors from "../constants/colors";
 
 const DetailsCard = ({ onPress, details }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={tw`flex-row justify-start`}>
+    <TouchableOpacity onPress={onPress} style={styles.cardContainer}>
       <Image
         style={[{ width: 150, height: 150, resizeMode: "contain" }]}
         source={{ uri: details.large_cover_image }}
       />
-      <View style={tw`flex-shrink`}>
-        <Text style={tw`font-bold text-white`}>{details.title_long}</Text>
-        <View style={tw`flex flex-row flex-wrap`}>
-          <Text style={tw`text-white`}>{details.genres.join(" - ")}</Text>
-          {/* <StarRating */}
-          {/*   disabled */}
-          {/*   rating={(details.rating / 10) * 5} */}
-          {/*   containerStyle={tw`ml-2 w-20`} */}
-          {/*   starStyle={tw`text-sm`} */}
-          {/*   fullStarColor="yellow" */}
-          {/* /> */}
+      <View style={styles.detailsContainer}>
+        <Text style={styles.showTitle}>{details.title_long}</Text>
+        <View style={styles.summaryContainer}>
+          <Text style={styles.text}>{details.genres.join(" - ")}</Text>
         </View>
-        <Text numberOfLines={4} ellipsizeMode="tail" style={tw`text-white`}>
+        <Text numberOfLines={4} ellipsizeMode="tail" style={styles.text}>
           {details.summary}
         </Text>
       </View>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  detailsContainer: {
+    flexShrink: 10,
+  },
+  showTitle: {
+    fontWeight: "700",
+    color: colors.primary,
+  },
+  summaryContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  text: {
+    color: colors.primary,
+  },
+});
 
 DetailsCard.propTypes = {
   onPress: PropTypes.func,
