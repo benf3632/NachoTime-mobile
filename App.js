@@ -12,12 +12,12 @@ import { store } from "./store";
 
 // screens
 import HomeScreen from "./screens/HomeScreen";
-import DetailsScreen from "./screens/DetailsScreen";
 
 // constants
 import colors from "./constants/colors";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const HomeScreenStack = () => {
   return (
@@ -26,7 +26,6 @@ const HomeScreenStack = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
     </Stack.Navigator>
   );
 };
@@ -38,8 +37,6 @@ const DownloadsScreen = () => {
     </View>
   );
 };
-
-const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
