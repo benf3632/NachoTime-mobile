@@ -25,7 +25,7 @@ const HomeScreenStack = () => {
         }}
         name="HomeScreen"
         component={HomeScreen}
-        />
+      />
       <Stack.Screen
         options={{
           headerShown: false,
@@ -65,9 +65,9 @@ const App = () => {
             tabBarActiveTintColor: "white",
             tabBarInactiveTintColor: "gray",
             tabBarStyle: {
-              backgroundColor: "#3D3F43FF",
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
+              backgroundColor: "#43464B",
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
               position: "absolute",
               overflow: "hidden",
             },

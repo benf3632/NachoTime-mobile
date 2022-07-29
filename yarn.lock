@@ -1117,6 +1117,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fawazahmed/react-native-read-more@npm:^2.3.7":
+  version: 2.3.7
+  resolution: "@fawazahmed/react-native-read-more@npm:2.3.7"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: aec55f6d082705bae5894df2b376935745185dd634c17fd2e371ebcfa3b874280695807c0556b373297b13f781a91a239cec94b3933bd4b733826eeb22a1d724
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -7436,6 +7448,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.12.9
     "@babel/runtime": ^7.12.5
+    "@fawazahmed/react-native-read-more": ^2.3.7
     "@react-native-community/blur": ^3.6.0
     "@react-native-community/eslint-config": ^2.0.0
     "@react-navigation/bottom-tabs": ^6.3.2
@@ -7451,6 +7464,7 @@ __metadata:
     react: 17.0.2
     react-native: 0.67.2
     react-native-dotenv: ^3.3.1
+    react-native-linear-gradient: ^2.6.2
     react-native-safe-area-context: ^3.3.2
     react-native-screens: ^3.10.2
     react-native-star-rating: ^1.1.0
@@ -8562,6 +8576,16 @@ __metadata:
   dependencies:
     dotenv: ^16.0.0
   checksum: 3bc8ef4fc2acc930b754ff6b7ae5f5abdf38864e717bced7459902c6b3f8262db234001530ee296f40112a5db467635ba249ae64b954ec29ab84dc80c2c47312
+  languageName: node
+  linkType: hard
+
+"react-native-linear-gradient@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "react-native-linear-gradient@npm:2.6.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: dd0e27d3ddffa239d46919fd397f1ad68cdb6bcaa48c11ec9b01a0f54f0ad383f203a2245f2f06206e63aa4443fe7b2b1cc105ee262bf9a84ee62dabad6028ad
   languageName: node
   linkType: hard
 
