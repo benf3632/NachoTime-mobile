@@ -14,25 +14,19 @@ import { store } from "./store";
 import HomeScreen from "./screens/HomeScreen";
 import DetailsScreen from "./screens/DetailsScreen";
 
+// constants
+import colors from "./constants/colors";
+
 const Stack = createNativeStackNavigator();
 
 const HomeScreenStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-        name="HomeScreen"
-        component={HomeScreen}
-      />
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-        name="DetailsScreen"
-        component={DetailsScreen}
-      />
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
     </Stack.Navigator>
   );
 };
@@ -65,11 +59,12 @@ const App = () => {
             tabBarActiveTintColor: "white",
             tabBarInactiveTintColor: "gray",
             tabBarStyle: {
-              backgroundColor: "#43464B",
+              position: "absolute",
+              backgroundColor: colors.background_accent,
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
-              position: "absolute",
-              overflow: "hidden",
+              borderTopWidth: 0,
+              elevation: 0,
             },
             headerShown: false,
           })}>
