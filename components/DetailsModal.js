@@ -59,7 +59,11 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
   }, [details]);
 
   return (
-    <Modal animationType="slide" transparent={true} visible={modalVisible}>
+    <Modal
+      onRequestClose={closeModalCallback}
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}>
       <View style={styles.modalContainer}>
         <ScrollView style={styles.showModalScrollView}>
           {/* Modal Header */}
