@@ -7467,6 +7467,7 @@ __metadata:
     react-native-linear-gradient: ^2.6.2
     react-native-safe-area-context: ^3.3.2
     react-native-screens: ^3.10.2
+    react-native-select-dropdown: ^2.0.4
     react-native-star-rating: ^1.1.0
     react-native-vector-icons: ^9.0.0
     react-native-webview: ^11.17.1
@@ -8609,6 +8610,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: ebc3cded19d594aafa748d5ab6e237533f68dc33e28a584c99b8a6cac993585919f01413b94e9801f01af4a138810575f55ee25f90d7a77cb13c49d3252edb2a
+  languageName: node
+  linkType: hard
+
+"react-native-select-dropdown@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "react-native-select-dropdown@npm:2.0.4"
+  checksum: ba10311cdc8e9fff03805c7b7a1e7294b57a4f3aa095a220acabc1954ea800752a3c055873d9b225c7ebf75f5c3675a7054626fe885e3c8a1020bc687fa67e2d
   languageName: node
   linkType: hard
 

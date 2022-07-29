@@ -19,13 +19,19 @@ import { fetchShowBackdropURL, fetchCast } from "../helper/tmbd";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 // constants
 import colors from "../constants/colors";
+import SelectDropdown from "react-native-select-dropdown";
 
 const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
   const [showBackdropURL, setShowBackdropURL] = useState(null);
   const [showCast, setShowCast] = useState(null);
+  const [availableQualities, setAvailableQualities] = useState([]);
+  const [selectedQuality, setSelectedQuality] = useState(null);
 
   const getShowBackdropURL = async () => {
     const backdropURL = await fetchShowBackdropURL(details.imdb_code);
@@ -37,9 +43,19 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
     setShowCast(cast);
   };
 
+  const getShowAvailableQualities = () => {
+    const showQualities = new Set();
+    details.torrents.forEach(torrent => {
+      showQualities.add(torrent.quality);
+    });
+    setAvailableQualities(Array.from(showQualities));
+  };
+
   useEffect(() => {
     getShowBackdropURL();
     getCast();
+    getShowAvailableQualities();
+    setSelectedQuality(null);
   }, [details]);
 
   return (
@@ -53,9 +69,6 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
             }}
             style={styles.showImageBackground}
             resizeMode="cover">
-            <TouchableOpacity onPress={closeModalCallback}>
-              <Ionicons name="arrow-down" size={30} color="black" />
-            </TouchableOpacity>
             {/* Favorite Icon */}
             <LinearGradient
               colors={["#00000000", colors.background]}
@@ -78,14 +91,46 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
           </ImageBackground>
           {/* Modal Body */}
           <View style={styles.modalBody}>
-            {/* Show Actions */}
-            <View>
-              {/* Quality Chooser */}
-              {/* Watch Button */}
-              {/* Download Button */}
+            <View style={styles.summaryHeadingContainer}>
+              {/* Show Summary */}
+              <Text style={styles.headingText}>Story Line</Text>
+              {/* Show Actions */}
+              <View style={styles.actionsContainer}>
+                {/* Quality Chooser */}
+                <View style={styles.qualityDropdownContainer}>
+                  <SelectDropdown
+                    buttonStyle={styles.qualityDropdown}
+                    buttonTextStyle={styles.qualityOptionText}
+                    rowStyle={styles.qualityDropdownRow}
+                    rowTextStyle={styles.qualityDropdownRowText}
+                    defaultButtonText="Quality"
+                    renderDropdownIcon={() => (
+                      <FontAwesome
+                        name="chevron-down"
+                        size={12}
+                        color="white"
+                      />
+                    )}
+                    data={availableQualities}
+                    onSelect={selectedItem => {
+                      setSelectedQuality(selectedItem);
+                    }}
+                  />
+                </View>
+                {/* Watch Button */}
+                <TouchableOpacity style={styles.moviePlayIcon}>
+                  <MaterialCommunityIcons
+                    name="movie-play"
+                    size={25}
+                    color={colors.accent}
+                  />
+                </TouchableOpacity>
+                {/* Download Button */}
+                <TouchableOpacity>
+                  <AntDesign name="download" size={25} color={colors.accent} />
+                </TouchableOpacity>
+              </View>
             </View>
-            {/* Show Summary */}
-            <Text style={styles.headingText}>Story Line</Text>
             <ReadMore
               numberOfLines={4}
               seeMoreText="Read More"
@@ -114,6 +159,11 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
             />
           </View>
         </ScrollView>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={closeModalCallback}>
+          <FontAwesome name="chevron-down" size={20} color="black" />
+        </TouchableOpacity>
       </View>
     </Modal>
   );
@@ -125,6 +175,11 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: colors.background,
   },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+  },
   showModalScrollView: {
     width: "100%",
     height: "100%",
@@ -133,7 +188,7 @@ const styles = StyleSheet.create({
   showImageBackground: {
     height: 400,
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   showDetailsHeader: {
     width: "100%",
@@ -173,6 +228,38 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     paddingLeft: "5%",
+  },
+  summaryHeadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingRight: 10,
+  },
+  actionsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  qualityDropdownContainer: {
+    paddingRight: 10,
+  },
+  qualityDropdown: {
+    width: 100,
+    height: 20,
+    marginVertical: 10,
+    backgroundColor: colors.background_accent,
+  },
+  qualityOptionText: {
+    fontSize: 14,
+    color: colors.primary,
+  },
+  qualityDropdownRow: {
+    backgroundColor: colors.background_accent,
+  },
+  qualityDropdownRowText: {
+    color: colors.primary,
+  },
+  moviePlayIcon: {
+    paddingRight: 10,
   },
   headingText: {
     fontSize: 18,
