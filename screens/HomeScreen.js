@@ -1,24 +1,27 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 // components
 import ShowDetailsCard from "../components/ShowDetailsCard";
 import DetailsModal from "../components/DetailsModal";
 import SelectSlider from "../components/SelectSlider";
+import MoviesList from "../components/MoviesList";
 
 // constants
 import colors from "../constants/colors";
 
-// actions
-import { incrementPage, setPage, addMovies } from "../slices/moviesSlice";
-
-// selectors
-import { selectPage, selectMovies } from "../slices/moviesSlice";
-
 // assets
 import nacho from "../assets/nacho.png";
-import MoviesList from "../components/MoviesList";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -53,7 +56,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <View style={styles.appTitleContainer}>
         <Text style={styles.appTitle}>NachoTime</Text>
         <Image style={styles.appIcon} source={nacho} />
@@ -68,6 +71,9 @@ const HomeScreen = () => {
           onValueChange={setSelected}
         />
       </View>
+      <ScrollView style={styles.showsListContainer}>
+        <ShowsList />
+      </ScrollView>
       {currentDetails && (
         <DetailsModal
           closeModalCallback={() => setModalVisibile(false)}
@@ -75,16 +81,14 @@ const HomeScreen = () => {
           details={currentDetails}
         />
       )}
-      <View style={styles.showsListContainer}>
-        <ShowsList />
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
-    width: "100%",
+    // width: "100%",
+    // height: "100%",
     height: "100%",
     backgroundColor: "#181826",
   },
@@ -108,6 +112,7 @@ const styles = StyleSheet.create({
   showsListContainer: {
     marginTop: 10,
     paddingHorizontal: "10%",
+    // overflow: "hidden",
   },
 });
 
