@@ -4,10 +4,16 @@ export const ytsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "https://yts.mx/api/v2" }),
   endpoints: builder => ({
     getMoviesByFilter: builder.query({
-      query: (filter, page = 1, limit = 10) =>
-        `list_movies.json?sort_by=${filter}&page=${page}&limit=${limit}`,
+      query: options =>
+        `list_movies.json?sort_by=${options.filter}&page=${
+          options.page || 1
+        }&limit=${options.limit || 10}`,
+      transformResponse: (response, meta, arg) => {
+        if (response.data.movie_count <= 0) return [];
+        return response.data.movies;
+      },
     }),
   }),
 });
 
-export const { useGetMoviesByFilter } = ytsApi;
+export const { useGetMoviesByFilterQuery } = ytsApi;

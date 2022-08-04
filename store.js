@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 
 // slices
 import moviesSlice from "./slices/moviesSlice";
@@ -11,4 +11,6 @@ export const store = configureStore({
     // movies: moviesSlice,
     [ytsApi.reducerPath]: ytsApi.reducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(ytsApi.middleware),
 });

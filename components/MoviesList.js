@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, StyleSheet, Text } from "react-native";
+import { FlatList, View, StyleSheet, Text, ScrollView } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import colors from "../constants/colors";
 
-// selectors
-import { selectMovies, selectPopularMovies } from "../slices/moviesSlice";
-
-// actions
-import { getMoviesByFilter } from "../slices/moviesSlice";
+// services
+import { useGetMoviesByFilterQuery } from "../services/ytsApi";
 
 // components
 import ShowDetailsCard from "./ShowDetailsCard";
 
 const MoviesList = ({ onSelect }) => {
-  const dispatch = useDispatch();
-  // const movies = useSelector(selectPopularMovies);
-  const [movies, setMovie] = useState([]);
-
-  useEffect(() => {
-    dispatch(getMoviesByFilter({ filter: "rating" }));
-    dispatch(getMoviesByFilter({ filter: "download_count" }));
-    dispatch(getMoviesByFilter({ filter: "date_added" }));
-  }, []);
+  const { data: popularMovies } = useGetMoviesByFilterQuery({
+    filter: "download_count",
+  });
+  const { data: latestMovies } = useGetMoviesByFilterQuery({
+    filter: "date_added",
+  });
+  const { data: mostRated } = useGetMoviesByFilterQuery({
+    filter: "rating",
+  });
 
   return (
-    <View>
+    <View style={{ height: "100%" }}>
       <View style={styles.headingContainer}>
         <View style={styles.headingMarker} />
         <Text style={styles.heading}>Popular Movies</Text>
       </View>
       <FlatList
         horizontal
-        // data={movies}
+        data={popularMovies}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.detailsCardContainer}>
@@ -45,7 +42,7 @@ const MoviesList = ({ onSelect }) => {
       </View>
       <FlatList
         horizontal
-        // data={movies}
+        data={latestMovies}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.detailsCardContainer}>
@@ -59,7 +56,7 @@ const MoviesList = ({ onSelect }) => {
       </View>
       <FlatList
         horizontal
-        // data={movies}
+        data={mostRated}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.detailsCardContainer}>
@@ -91,7 +88,6 @@ const styles = StyleSheet.create({
     marginLeft: "1%",
   },
   detailsCardContainer: {
-    // marginVertical: 20,
     marginTop: "10%",
   },
 });
