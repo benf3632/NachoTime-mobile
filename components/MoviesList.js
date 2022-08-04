@@ -21,7 +21,7 @@ const MoviesList = ({ onSelect }) => {
   });
 
   return (
-    <View style={{ height: "100%" }}>
+    <>
       <View style={styles.headingContainer}>
         <View style={styles.headingMarker} />
         <Text style={styles.heading}>Popular Movies</Text>
@@ -64,7 +64,7 @@ const MoviesList = ({ onSelect }) => {
           </View>
         )}
       />
-    </View>
+    </>
   );
 };
 
