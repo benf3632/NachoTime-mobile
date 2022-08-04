@@ -24,6 +24,7 @@ const HomeScreenStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        presentation: "transparentModal",
       }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
     </Stack.Navigator>
@@ -38,10 +39,18 @@ const DownloadsScreen = () => {
   );
 };
 
+const navTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.background,
+  },
+};
+
 const App = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
+      <NavigationContainer theme={navTheme}>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
@@ -56,12 +65,7 @@ const App = () => {
             tabBarActiveTintColor: "white",
             tabBarInactiveTintColor: "gray",
             tabBarStyle: {
-              position: "absolute",
               backgroundColor: colors.background_accent,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              borderTopWidth: 0,
-              elevation: 0,
             },
             headerShown: false,
           })}>
