@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 // components
-import DetailsCard from "../components/DetailsCard";
+import ShowDetailsCard from "../components/ShowDetailsCard";
 import DetailsModal from "../components/DetailsModal";
 import SelectSlider from "../components/SelectSlider";
 
@@ -18,11 +18,12 @@ import { selectPage, selectMovies } from "../slices/moviesSlice";
 
 // assets
 import nacho from "../assets/nacho.png";
+import MoviesList from "../components/MoviesList";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
-  const page = useSelector(selectPage);
-  const movies = useSelector(selectMovies);
+  // const page = useSelector(selectPage);
+  // const movies = useSelector(selectMovies);
 
   const [modalVisible, setModalVisibile] = useState(false);
   const [currentDetails, setCurrentDetails] = useState(null);
@@ -35,20 +36,7 @@ const HomeScreen = () => {
 
   const ShowsList = () => {
     if (selected === 0) {
-      return (
-        <FlatList
-          data={movies}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.detailsCardContainer}>
-              <DetailsCard
-                onPress={() => handleDetailsCardPressed(item)}
-                details={item}
-              />
-            </View>
-          )}
-        />
-      );
+      return <MoviesList onSelect={handleDetailsCardPressed} />;
     } else {
       return (
         <View
@@ -87,7 +75,9 @@ const HomeScreen = () => {
           details={currentDetails}
         />
       )}
-      <ShowsList />
+      <View style={styles.showsListContainer}>
+        <ShowsList />
+      </View>
     </View>
   );
 };
@@ -115,9 +105,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
-  detailsCardContainer: {
-    marginTop: 20,
-    marginBottom: 20,
+  showsListContainer: {
+    marginTop: 10,
+    paddingHorizontal: "10%",
   },
 });
 
