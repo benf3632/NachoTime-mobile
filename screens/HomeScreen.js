@@ -3,15 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   Image,
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
 
 // components
-import ShowDetailsCard from "../components/ShowDetailsCard";
 import DetailsModal from "../components/DetailsModal";
 import SelectSlider from "../components/SelectSlider";
 import MoviesList from "../components/MoviesList";
@@ -21,13 +18,8 @@ import colors from "../constants/colors";
 
 // assets
 import nacho from "../assets/nacho.png";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
-  const dispatch = useDispatch();
-  // const page = useSelector(selectPage);
-  // const movies = useSelector(selectMovies);
-
   const [modalVisible, setModalVisibile] = useState(false);
   const [currentDetails, setCurrentDetails] = useState(null);
   const [selected, setSelected] = useState(0);
@@ -71,7 +63,7 @@ const HomeScreen = () => {
           onValueChange={setSelected}
         />
       </View>
-      <ScrollView style={styles.showsListContainer}>
+      <ScrollView ind style={styles.showsListContainer}>
         <ShowsList />
       </ScrollView>
       {currentDetails && (
@@ -87,8 +79,6 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    // width: "100%",
-    // height: "100%",
     height: "100%",
     backgroundColor: "#181826",
   },
@@ -100,6 +90,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: "2%",
   },
   appTitle: {
     fontSize: 32,
@@ -112,7 +103,6 @@ const styles = StyleSheet.create({
   showsListContainer: {
     marginTop: 10,
     paddingHorizontal: "10%",
-    // overflow: "hidden",
   },
 });
 
