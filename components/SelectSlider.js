@@ -37,7 +37,7 @@ export default function SelectSlider({ data, onValueChange }) {
       style={[
         styles.sliderContainer,
         {
-          paddingHorizontal: width / 10,
+          // paddingHorizontal: width / 10,
         },
       ]}>
       <Animated.View
@@ -54,12 +54,19 @@ export default function SelectSlider({ data, onValueChange }) {
           },
         ]}
       />
-      {data &&
-        data.map((item, index) => (
-          <TouchableOpacity onPress={() => handleOnPress(index)} key={item.key}>
-            <Text style={styles.labelText}>{item.value}</Text>
-          </TouchableOpacity>
-        ))}
+      {data.map((item, index) => (
+        <TouchableOpacity onPress={() => handleOnPress(index)} key={item.key}>
+          <Text
+            style={[
+              styles.labelText,
+              {
+                width: width / data.length,
+              },
+            ]}>
+            {item.value}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 }
@@ -68,17 +75,19 @@ const styles = StyleSheet.create({
   sliderContainer: {
     backgroundColor: colors.background_accent,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
     width: 300,
-    paddingVertical: 5,
+    // paddingVertical: 5,
     borderRadius: 100,
     overflow: "hidden",
   },
   labelText: {
     color: colors.primary,
+    // textAlign: "center",
+    // textAlignVertical: "center",
+    paddingVertical: 5,
     textAlign: "center",
-    textAlignVertical: "center",
   },
   selected: {
     backgroundColor: colors.accent,
