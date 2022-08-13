@@ -27,6 +27,7 @@ const MoviesList = ({ onSelect }) => {
         <Text style={styles.heading}>Popular Movies</Text>
       </View>
       <FlatList
+        style={styles.horizontalMovieListContainer}
         horizontal
         data={popularMovies}
         keyExtractor={item => item.id}
@@ -41,6 +42,7 @@ const MoviesList = ({ onSelect }) => {
         <Text style={styles.heading}>Latest Movies</Text>
       </View>
       <FlatList
+        style={styles.horizontalMovieListContainer}
         horizontal
         data={latestMovies}
         keyExtractor={item => item.id}
@@ -55,6 +57,7 @@ const MoviesList = ({ onSelect }) => {
         <Text style={styles.heading}>Most Rated</Text>
       </View>
       <FlatList
+        style={styles.horizontalMovieListContainer}
         horizontal
         data={mostRated}
         keyExtractor={item => item.id}
@@ -86,6 +89,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: colors.primary,
     marginLeft: "1%",
+  },
+  horizontalMovieListContainer: {
+    paddingBottom: "5%",
   },
   detailsCardContainer: {
     marginTop: "10%",

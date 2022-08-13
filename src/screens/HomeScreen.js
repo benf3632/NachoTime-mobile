@@ -47,6 +47,11 @@ const HomeScreen = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    setModalVisibile(false);
+    setCurrentDetails(null);
+  };
+
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.appTitleContainer}>
@@ -68,7 +73,7 @@ const HomeScreen = () => {
       </ScrollView>
       {currentDetails && (
         <DetailsModal
-          closeModalCallback={() => setModalVisibile(false)}
+          closeModalCallback={handleCloseModal}
           modalVisible={modalVisible}
           details={currentDetails}
         />
