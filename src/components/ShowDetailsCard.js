@@ -5,9 +5,9 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 // constants
 import colors from "../constants/colors";
 
-const ShowDetailsCard = ({ onPress, details }) => {
+const ShowDetailsCard = ({ onPress, details, style }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity style={style} onPress={onPress}>
       <Image
         style={styles.imageCover}
         source={{ uri: details.large_cover_image }}

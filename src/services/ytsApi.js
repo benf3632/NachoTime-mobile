@@ -3,9 +3,9 @@ export const ytsApi = createApi({
   reducerPath: "ytsApi",
   baseQuery: fetchBaseQuery({ baseUrl: "https://yts.mx/api/v2" }),
   endpoints: builder => ({
-    getMoviesByFilter: builder.query({
+    queryMovies: builder.query({
       query: options =>
-        `list_movies.json?sort_by=${options.filter}&page=${
+        `list_movies.json?query_term=${options.query}&page=${
           options.page || 1
         }&limit=${options.limit || 10}`,
       transformResponse: (response, meta, arg) => {
@@ -16,4 +16,4 @@ export const ytsApi = createApi({
   }),
 });
 
-export const { useGetMoviesByFilterQuery } = ytsApi;
+export const { useQueryMoviesQuery } = ytsApi;

@@ -12,6 +12,7 @@ import { store } from "./store";
 
 // screens
 import HomeScreen from "./screens/HomeScreen";
+import SearchScreen from "./screens/SearchScreen";
 
 // constants
 import colors from "./constants/colors";
@@ -59,6 +60,8 @@ const App = () => {
                 iconName = "home";
               } else if (route.name === "Downloads") {
                 iconName = "md-download";
+              } else if (route.name === "Search") {
+                iconName = "search";
               }
               return <Ionicons name={iconName} size={size} color={color} />;
             },
@@ -70,6 +73,7 @@ const App = () => {
             headerShown: false,
           })}>
           <Tab.Screen name="Home" component={HomeScreenStack} />
+          <Tab.Screen name="Search" component={SearchScreen} />
           <Tab.Screen name="Downloads" component={DownloadsScreen} />
         </Tab.Navigator>
       </NavigationContainer>

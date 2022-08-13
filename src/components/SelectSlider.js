@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import colors from "../constants/colors";
 
-export default function SelectSlider({ data, onValueChange }) {
+export default function SelectSlider({ data, onValueChange, style }) {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [selected, setSelected] = useState(0);
@@ -32,14 +32,7 @@ export default function SelectSlider({ data, onValueChange }) {
   };
 
   return (
-    <View
-      onLayout={handleOnLayout}
-      style={[
-        styles.sliderContainer,
-        {
-          // paddingHorizontal: width / 10,
-        },
-      ]}>
+    <View onLayout={handleOnLayout} style={[styles.sliderContainer, style]}>
       <Animated.View
         style={[
           styles.selected,
