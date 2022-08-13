@@ -3,20 +3,15 @@ import { FlatList, View, StyleSheet, Text, ScrollView } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import colors from "../constants/colors";
 
-// services
-import { useGetMoviesByFilterQuery } from "../services/ytsApi";
-
 // actions
-import {
-  getMoviesByFilter,
-  selectLoadedInitialState,
-} from "../slices/moviesSlice";
+import { getMoviesByFilter } from "../slices/moviesSlice";
 
 // selectors
 import {
   selectPopularMovies,
   selectRatedMovies,
   selectLatestMovies,
+  selectLoadedInitialState,
 } from "../slices/moviesSlice";
 
 // components
