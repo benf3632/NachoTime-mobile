@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { FlatList, View, StyleSheet, Text, ScrollView } from "react-native";
+import React, { useEffect } from "react";
+import { FlatList, View, StyleSheet, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import colors from "../constants/colors";
 
 // actions
-import { getMoviesByFilter } from "../slices/moviesSlice";
+import { getMoviesByFilter, getNextPage } from "../slices/moviesSlice";
 
 // selectors
 import {
@@ -13,6 +13,7 @@ import {
   selectLatestMovies,
   selectLoadedInitialState,
 } from "../slices/moviesSlice";
+import LoadingCard from "./LoadingCard";
 
 // components
 import ShowDetailsCard from "./ShowDetailsCard";
@@ -36,6 +37,10 @@ const MoviesList = ({ onSelect }) => {
     await dispatch(getMoviesByFilter("date_added"));
   };
 
+  const fetchNextPage = async filter => {
+    await dispatch(getNextPage(filter));
+  };
+
   useEffect(() => {
     if (!loadedInitialState) {
       getPopularMovies();
@@ -54,11 +59,14 @@ const MoviesList = ({ onSelect }) => {
         style={styles.horizontalMovieListContainer}
         horizontal
         data={popularMovies.movies}
-        keyExtractor={item => `popularMovies_${item.imdb_code}`}
+        keyExtractor={(item, index) =>
+          `popularMovies_${item.imdb_code}_${index}`
+        }
+        ListFooterComponent={popularMovies.loading ? <LoadingCard /> : <></>}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => fetchNextPage("download_count")}
         renderItem={({ item }) => (
-          <View style={styles.detailsCardContainer}>
-            <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
-          </View>
+          <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
         )}
       />
       <View style={styles.headingContainer}>
@@ -69,11 +77,14 @@ const MoviesList = ({ onSelect }) => {
         style={styles.horizontalMovieListContainer}
         horizontal
         data={latestMovies.movies}
-        keyExtractor={item => `latestMovies_${item.imdb_code}`}
+        ListFooterComponent={latestMovies.loading ? <LoadingCard /> : <></>}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => fetchNextPage("date_added")}
+        keyExtractor={(item, index) =>
+          `latestMovies_${item.imdb_code}_${index}`
+        }
         renderItem={({ item }) => (
-          <View style={styles.detailsCardContainer}>
-            <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
-          </View>
+          <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
         )}
       />
       <View style={styles.headingContainer}>
@@ -84,11 +95,12 @@ const MoviesList = ({ onSelect }) => {
         style={styles.horizontalMovieListContainer}
         horizontal
         data={ratedMovies.movies}
-        keyExtractor={item => `ratedMovies_${item.imdb_code}`}
+        ListFooterComponent={ratedMovies.loading ? <LoadingCard /> : <></>}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => fetchNextPage("rating")}
+        keyExtractor={(item, index) => `ratedMovies_${item.imdb_code}_${index}`}
         renderItem={({ item }) => (
-          <View style={styles.detailsCardContainer}>
-            <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
-          </View>
+          <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
         )}
       />
     </>
@@ -115,7 +127,9 @@ const styles = StyleSheet.create({
     marginLeft: "1%",
   },
   horizontalMovieListContainer: {
+    paddingTop: "3%",
     paddingBottom: "5%",
+    flexDirection: "row",
   },
   detailsCardContainer: {
     marginTop: "10%",
