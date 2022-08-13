@@ -6,19 +6,48 @@ import colors from "../constants/colors";
 // services
 import { useGetMoviesByFilterQuery } from "../services/ytsApi";
 
+// actions
+import {
+  getMoviesByFilter,
+  selectLoadedInitialState,
+} from "../slices/moviesSlice";
+
+// selectors
+import {
+  selectPopularMovies,
+  selectRatedMovies,
+  selectLatestMovies,
+} from "../slices/moviesSlice";
+
 // components
 import ShowDetailsCard from "./ShowDetailsCard";
 
 const MoviesList = ({ onSelect }) => {
-  const { data: popularMovies } = useGetMoviesByFilterQuery({
-    filter: "download_count",
-  });
-  const { data: latestMovies } = useGetMoviesByFilterQuery({
-    filter: "date_added",
-  });
-  const { data: mostRated } = useGetMoviesByFilterQuery({
-    filter: "rating",
-  });
+  const dispatch = useDispatch();
+  const popularMovies = useSelector(selectPopularMovies);
+  const ratedMovies = useSelector(selectRatedMovies);
+  const latestMovies = useSelector(selectLatestMovies);
+  const loadedInitialState = useSelector(selectLoadedInitialState);
+
+  const getPopularMovies = async () => {
+    await dispatch(getMoviesByFilter("download_count"));
+  };
+
+  const getRatedMovies = async () => {
+    await dispatch(getMoviesByFilter("rating"));
+  };
+
+  const getLatestMovies = async () => {
+    await dispatch(getMoviesByFilter("date_added"));
+  };
+
+  useEffect(() => {
+    if (!loadedInitialState) {
+      getPopularMovies();
+      getRatedMovies();
+      getLatestMovies();
+    }
+  }, []);
 
   return (
     <>
@@ -29,8 +58,8 @@ const MoviesList = ({ onSelect }) => {
       <FlatList
         style={styles.horizontalMovieListContainer}
         horizontal
-        data={popularMovies}
-        keyExtractor={item => item.id}
+        data={popularMovies.movies}
+        keyExtractor={item => `popularMovies_${item.imdb_code}`}
         renderItem={({ item }) => (
           <View style={styles.detailsCardContainer}>
             <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
@@ -44,8 +73,8 @@ const MoviesList = ({ onSelect }) => {
       <FlatList
         style={styles.horizontalMovieListContainer}
         horizontal
-        data={latestMovies}
-        keyExtractor={item => item.id}
+        data={latestMovies.movies}
+        keyExtractor={item => `latestMovies_${item.imdb_code}`}
         renderItem={({ item }) => (
           <View style={styles.detailsCardContainer}>
             <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
@@ -59,8 +88,8 @@ const MoviesList = ({ onSelect }) => {
       <FlatList
         style={styles.horizontalMovieListContainer}
         horizontal
-        data={mostRated}
-        keyExtractor={item => item.id}
+        data={ratedMovies.movies}
+        keyExtractor={item => `ratedMovies_${item.imdb_code}`}
         renderItem={({ item }) => (
           <View style={styles.detailsCardContainer}>
             <ShowDetailsCard onPress={() => onSelect(item)} details={item} />

@@ -8,7 +8,7 @@ import { ytsApi } from "./services/ytsApi";
 
 export const store = configureStore({
   reducer: {
-    // movies: moviesSlice,
+    movies: moviesSlice,
     [ytsApi.reducerPath]: ytsApi.reducer,
   },
   middleware: getDefaultMiddleware =>
