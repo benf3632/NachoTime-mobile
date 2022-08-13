@@ -71,6 +71,7 @@ const App = () => {
               backgroundColor: colors.background_accent,
             },
             headerShown: false,
+            tabBarHideOnKeyboard: true,
           })}>
           <Tab.Screen name="Home" component={HomeScreenStack} />
           <Tab.Screen name="Search" component={SearchScreen} />
