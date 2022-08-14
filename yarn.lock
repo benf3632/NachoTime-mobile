@@ -1461,6 +1461,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-async-storage/async-storage@npm:^1.17.9":
+  version: 1.17.9
+  resolution: "@react-native-async-storage/async-storage@npm:1.17.9"
+  dependencies:
+    merge-options: ^3.0.4
+  peerDependencies:
+    react-native: ^0.0.0-0 || 0.60 - 0.69 || 1000.0.0
+  checksum: 7b1e9ba9b084175ed29594f7462e73159390e92de80cbcba83fc2652a72fdf4dcafcc1f8e3fb921df6eb4a5c6c5759bdbdc0a42eb655eb40adc04ffa5ef16372
+  languageName: node
+  linkType: hard
+
 "@react-native-community/blur@npm:^3.6.0":
   version: 3.6.0
   resolution: "@react-native-community/blur@npm:3.6.0"
@@ -5284,6 +5295,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-plain-obj@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "is-plain-obj@npm:2.1.0"
+  checksum: cec9100678b0a9fe0248a81743041ed990c2d4c99f893d935545cfbc42876cbe86d207f3b895700c690ad2fa520e568c44afc1605044b535a7820c1d40e38daa
+  languageName: node
+  linkType: hard
+
 "is-plain-object@npm:^2.0.3, is-plain-object@npm:^2.0.4":
   version: 2.0.4
   resolution: "is-plain-object@npm:2.0.4"
@@ -6399,6 +6417,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"merge-options@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "merge-options@npm:3.0.4"
+  dependencies:
+    is-plain-obj: ^2.1.0
+  checksum: d86ddb3dd6e85d558dbf25dc944f3527b6bacb944db3fdda6e84a3f59c4e4b85231095f58b835758b9a57708342dee0f8de0dffa352974a48221487fe9f4584f
+  languageName: node
+  linkType: hard
+
 "merge-stream@npm:^2.0.0":
   version: 2.0.0
   resolution: "merge-stream@npm:2.0.0"
@@ -7009,6 +7036,7 @@ __metadata:
     "@babel/core": ^7.12.9
     "@babel/runtime": ^7.12.5
     "@fawazahmed/react-native-read-more": ^2.3.7
+    "@react-native-async-storage/async-storage": ^1.17.9
     "@react-native-community/blur": ^3.6.0
     "@react-native-community/eslint-config": ^2.0.0
     "@react-navigation/bottom-tabs": ^6.3.2
@@ -7033,6 +7061,8 @@ __metadata:
     react-native-vector-icons: ^9.0.0
     react-redux: ^7.2.6
     react-test-renderer: 17.0.2
+    redux-persist: ^6.0.0
+    redux-thunk: ^2.4.1
   languageName: unknown
   linkType: soft
 
@@ -8144,6 +8174,15 @@ __metadata:
     source-map: ~0.6.1
     tslib: ^2.0.1
   checksum: 14c35115cd9965950724cb2968f069a247fa79ce890643ab6dc3795c705b363f7b92a45238e9f765387c306763be9955f72047bb9d15b5d60b0a55f9e7912d5a
+  languageName: node
+  linkType: hard
+
+"redux-persist@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "redux-persist@npm:6.0.0"
+  peerDependencies:
+    redux: ">4.0.0"
+  checksum: edaf10dbf17351ce8058d0802357adae8665b3a1ff39371834e37838ddbe1a79cccbc717b8ba54acb5307651ccf51d0f7dc1cbc8dbae0726ff952d11ef61c6b8
   languageName: node
   linkType: hard
 
