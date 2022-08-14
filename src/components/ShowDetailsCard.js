@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 // constants
-import colors from "../constants/colors";
+import colors from "@app/constants/colors";
 
 const ShowDetailsCard = ({ onPress, details, style }) => {
   return (

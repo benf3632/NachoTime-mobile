@@ -14,7 +14,7 @@ import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
 // helpers
-import { fetchShowBackdropURL, fetchCast } from "../helper/tmbd";
+import { fetchShowBackdropURL, fetchCast } from "@app/helper/tmbd";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -23,7 +23,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import AntDesign from "react-native-vector-icons/AntDesign";
 
 // constants
-import colors from "../constants/colors";
+import colors from "@app/constants/colors";
 import SelectDropdown from "react-native-select-dropdown";
 
 const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {

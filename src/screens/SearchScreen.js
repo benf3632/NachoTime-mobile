@@ -3,17 +3,17 @@ import { View, Text, StyleSheet, TextInput, FlatList } from "react-native";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
-import DetailsModal from "../components/DetailsModal";
+import DetailsModal from "@app/components/DetailsModal";
 
 // components
-import SelectSlider from "../components/SelectSlider";
-import ShowDetailsCard from "../components/ShowDetailsCard";
+import SelectSlider from "@app/components/SelectSlider";
+import ShowDetailsCard from "@app/components/ShowDetailsCard";
 
 // constants
-import colors from "../constants/colors";
+import colors from "@app/constants/colors";
 
 // helpers
-import { queryMovies } from "../helper/yts";
+import { queryMovies } from "@app/helper/yts";
 
 const SearchScreen = () => {
   const [searchInput, onSearchInputChange] = useState("");

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-import colors from "../constants/colors";
+import colors from "@app/constants/colors";
 
 export default function SelectSlider({ data, onValueChange, style }) {
   const [height, setHeight] = useState(0);

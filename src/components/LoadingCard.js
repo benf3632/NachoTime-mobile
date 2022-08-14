@@ -2,7 +2,7 @@ import React from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 
 // constants
-import colors from "../constants/colors";
+import colors from "@app/constants/colors";
 
 const LoadingCard = () => {
   return (

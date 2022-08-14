@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // helpers
-import { fetchMoviesByFilter } from "../helper/yts";
+import { fetchMoviesByFilter } from "@app/helper/yts";
 
 const initialState = {
   download_count: {
@@ -85,8 +85,6 @@ export const moviesSlice = createSlice({
   },
 });
 
-// export const selectMovies = state => state.movies.movies;
-// export const selectPage = state => state.movies.page;
 export const selectPopularMovies = state => state.movies["download_count"];
 export const selectRatedMovies = state => state.movies["rating"];
 export const selectLatestMovies = state => state.movies["date_added"];

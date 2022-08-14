@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { FlatList, View, StyleSheet, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import colors from "../constants/colors";
+import colors from "@app/constants/colors";
 
 // actions
-import { getMoviesByFilter, getNextPage } from "../slices/moviesSlice";
+import { getMoviesByFilter, getNextPage } from "@app/slices/moviesSlice";
 
 // selectors
 import {
@@ -12,7 +12,7 @@ import {
   selectRatedMovies,
   selectLatestMovies,
   selectLoadedInitialState,
-} from "../slices/moviesSlice";
+} from "@app/slices/moviesSlice";
 import LoadingCard from "./LoadingCard";
 
 // components
