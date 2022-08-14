@@ -8,5 +8,13 @@ module.exports = {
         path: ".env",
       },
     ],
+    [
+      "module-resolver",
+      {
+        alias: {
+          "@app": "./src",
+        },
+      },
+    ],
   ],
 };

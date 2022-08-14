@@ -9,15 +9,15 @@ import {
 } from "react-native";
 
 // components
-import DetailsModal from "../components/DetailsModal";
-import SelectSlider from "../components/SelectSlider";
-import MoviesList from "../components/MoviesList";
+import DetailsModal from "@app/components/DetailsModal";
+import SelectSlider from "@app/components/SelectSlider";
+import MoviesList from "@app/components/MoviesList";
 
 // constants
-import colors from "../constants/colors";
+import colors from "@app/constants/colors";
 
 // assets
-import nacho from "../assets/nacho.png";
+import nacho from "@app/assets/nacho.png";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisibile] = useState(false);
