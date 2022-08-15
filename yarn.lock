@@ -6968,6 +6968,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mitt@npm:1.1.3":
+  version: 1.1.3
+  resolution: "mitt@npm:1.1.3"
+  checksum: 856a786b3fd82aaf5bb46d9bcc13250f7ec682cc89a800ed718e8ca01a849a3dc5b84e5cbd874c7504745ea1c1f6789d7257892879ae242d0df70d3a17513f97
+  languageName: node
+  linkType: hard
+
 "mixin-deep@npm:^1.2.0":
   version: 1.3.2
   resolution: "mixin-deep@npm:1.3.2"
@@ -7061,6 +7068,7 @@ __metadata:
     react-native-vector-icons: ^9.2.0
     react-redux: ^7.2.6
     react-test-renderer: 17.0.2
+    reactotron-react-native: ^5.0.2
     redux-persist: ^6.0.0
     redux-thunk: ^2.4.1
   languageName: unknown
@@ -7871,6 +7879,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"query-string@npm:6.10.1":
+  version: 6.10.1
+  resolution: "query-string@npm:6.10.1"
+  dependencies:
+    decode-uri-component: ^0.2.0
+    split-on-first: ^1.0.0
+    strict-uri-encode: ^2.0.0
+  checksum: 93925c3ceade180cad70277cb0379c45fbac06b9f432593930352b3d15e39dbcb204f8fb2059daba87bd0798fb1071c5a59cd937f580a7cf8ecd29881103febe
+  languageName: node
+  linkType: hard
+
 "query-string@npm:^7.0.0":
   version: 7.1.1
   resolution: "query-string@npm:7.1.1"
@@ -7947,6 +7966,16 @@ __metadata:
   dependencies:
     dotenv: ^16.0.0
   checksum: 3bc8ef4fc2acc930b754ff6b7ae5f5abdf38864e717bced7459902c6b3f8262db234001530ee296f40112a5db467635ba249ae64b954ec29ab84dc80c2c47312
+  languageName: node
+  linkType: hard
+
+"react-native-flipper@npm:^0.34.0":
+  version: 0.34.0
+  resolution: "react-native-flipper@npm:0.34.0"
+  peerDependencies:
+    react: ^16.8.1
+    react-native: ^0.62.0
+  checksum: 1186844c98f66017aac76457425bb32aec76b1733b2d84ddaac800bfc3c20af61996c7982a773833b2b8e99089acc669586a2bdcd3f8aef28f97f7b79bdcd9a2
   languageName: node
   linkType: hard
 
@@ -8106,6 +8135,31 @@ __metadata:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
+  languageName: node
+  linkType: hard
+
+"reactotron-core-client@npm:2.8.10":
+  version: 2.8.10
+  resolution: "reactotron-core-client@npm:2.8.10"
+  checksum: 766d33d7a2956860b8b655113121bc7a0922ddcb33e76fb849d065fcfc2bbda2fadf8d8af7b32e6944a292526b24de7f6444e5e0eb5b49d431f02ddb3a088fd5
+  languageName: node
+  linkType: hard
+
+"reactotron-react-native@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "reactotron-react-native@npm:5.0.2"
+  dependencies:
+    mitt: 1.1.3
+    query-string: 6.10.1
+    react-native-flipper: ^0.34.0
+    reactotron-core-client: 2.8.10
+    rn-host-detect: 1.2.0
+  peerDependencies:
+    react-native: ">=0.40.0"
+  dependenciesMeta:
+    react-native-flipper:
+      optional: true
+  checksum: 044ca744f39b3658fb327957031b29c5f64c3165142831a22caff84444d1456bf451cda4ff4788b1d35d5452eaeea06792c9c853ead447d6c54d9fc6838975bd
   languageName: node
   linkType: hard
 
@@ -8490,6 +8544,13 @@ __metadata:
   bin:
     rimraf: ./bin.js
   checksum: 01804e1c0430eeece3fd778e836e9682c011e126d42a4f560e930f8cdc2d99c7e586e63d18c5a65accbd51f9ac57706177550de0538c1dd45c335755605de166
+  languageName: node
+  linkType: hard
+
+"rn-host-detect@npm:1.2.0":
+  version: 1.2.0
+  resolution: "rn-host-detect@npm:1.2.0"
+  checksum: 447b06d6726b665d9d7933b5da96232aad6ee01d1c8287e7b67e9ed1d07cde437127aaa4cf2f51ee2dfb4bb0f0cb398d2676220a392d990e99f6f2aefcc5f5b0
   languageName: node
   linkType: hard
 

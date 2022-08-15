@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
@@ -29,4 +29,4 @@ ShowDetailsCard.propTypes = {
   details: PropTypes.object,
 };
 
-export default ShowDetailsCard;
+export default memo(ShowDetailsCard);
