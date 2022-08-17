@@ -16,6 +16,7 @@ import SearchScreen from "./screens/SearchScreen";
 
 // constants
 import colors from "./constants/colors";
+import TabBar from "./components/TabBar";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,6 +54,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer theme={navTheme}>
         <Tab.Navigator
+          tabBar={props => <TabBar {...props} />}
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
