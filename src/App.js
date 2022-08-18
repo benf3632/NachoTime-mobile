@@ -77,7 +77,9 @@ const App = () => {
           })}>
           <Tab.Screen name="Home" component={HomeScreenStack} />
           <Tab.Screen name="Search" component={SearchScreen} />
+          <Tab.Screen name="Favorites" component={DownloadsScreen} />
           <Tab.Screen name="Downloads" component={DownloadsScreen} />
+          <Tab.Screen name="Settings" component={DownloadsScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>

@@ -1,3 +1,4 @@
+import colors from "@app/constants/colors";
 import { set } from "immer/dist/internal";
 import React, { useEffect } from "react";
 import { Animated, TouchableOpacity, View } from "react-native";
@@ -7,22 +8,26 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const TabBar = ({ state, descriptors, navigation }) => {
   const [width, setWidth] = React.useState(0);
 
-  const selectedIndicatorPosition = React.useRef(
-    new Animated.Value(width / 2 - 25),
-  ).current;
+  const indicatorPosition = React.useRef(new Animated.Value(0)).current;
 
   const animateIndicator = index => {
-    Animated.spring(selectedIndicatorPosition, {
-      toValue:
-        index !== 0 ? width * index + (width / 2 - 32.5) : width / 2 - 25,
+    const numRoutes = state.routes.length;
+    let toValue = 0;
+    if (index === numRoutes - 1) {
+      toValue = width * index - width * 0.15;
+    } else if (index === 0) {
+      toValue = 0;
+    } else if (index < Math.floor(numRoutes / 2)) {
+      toValue = width * index - width * 0.095;
+    } else {
+      toValue = width * index - width * 0.1;
+    }
+    Animated.spring(indicatorPosition, {
+      toValue,
       duration: 100,
       useNativeDriver: true,
     }).start();
   };
-
-  useEffect(() => {
-    // selectedIndicatorPosition.setValue(width / 2 - 25);
-  }, [width]);
 
   return (
     <View
@@ -31,7 +36,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
       }}
       style={{
         paddingHorizontal: "2%",
-        paddingTop: "3%",
+        paddingVertical: "3%",
         flexDirection: "row",
         backgroundColor: "black",
         elevation: 2,
@@ -48,8 +53,14 @@ const TabBar = ({ state, descriptors, navigation }) => {
           case "Search":
             iconName = "search";
             break;
+          case "Favorites":
+            iconName = "heart";
+            break;
           case "Downloads":
             iconName = "md-download";
+            break;
+          case "Settings":
+            iconName = "settings";
             break;
           default:
             iconName = "";
@@ -86,16 +97,14 @@ const TabBar = ({ state, descriptors, navigation }) => {
           position: "absolute",
           backgroundColor: "white",
           top: 0,
-          width: width / 2.15,
-          //   marginLeft: width / 3.25,
-          //   paddingRight: width * 0.25,
+          width: width / 1.5,
           height: "20%",
           borderRadius: width,
-          //   left: width / 2 - 25,
           overflow: "hidden",
+          left: width * 0.25,
           transform: [
             {
-              translateX: selectedIndicatorPosition,
+              translateX: indicatorPosition,
             },
           ],
         }}
