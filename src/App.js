@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider } from "react-redux";
 import { View, Text, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -51,22 +52,24 @@ const navTheme = {
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <NavigationContainer theme={navTheme}>
-        <Tab.Navigator
-          tabBar={props => <TabBar {...props} />}
-          screenOptions={() => ({
-            headerShown: false,
-            tabBarHideOnKeyboard: true,
-          })}>
-          <Tab.Screen name="Home" component={HomeScreenStack} />
-          <Tab.Screen name="Search" component={SearchScreen} />
-          <Tab.Screen name="Favorites" component={DownloadsScreen} />
-          <Tab.Screen name="Downloads" component={DownloadsScreen} />
-          <Tab.Screen name="Settings" component={DownloadsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <NavigationContainer theme={navTheme}>
+          <Tab.Navigator
+            tabBar={props => <TabBar {...props} />}
+            screenOptions={() => ({
+              headerShown: false,
+              tabBarHideOnKeyboard: true,
+            })}>
+            <Tab.Screen name="Home" component={HomeScreenStack} />
+            <Tab.Screen name="Search" component={SearchScreen} />
+            <Tab.Screen name="Favorites" component={DownloadsScreen} />
+            <Tab.Screen name="Downloads" component={DownloadsScreen} />
+            <Tab.Screen name="Settings" component={DownloadsScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 
