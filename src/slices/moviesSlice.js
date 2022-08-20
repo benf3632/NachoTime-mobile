@@ -32,7 +32,7 @@ export const getMoviesByFilter = createAsyncThunk(
   "movies/getMoviesByFilter",
   async (filter, thunkApi) => {
     const movies = await fetchMoviesByFilter(filter, 1, 10);
-    // console.log(movies);
+    // throw Error("Failed to Load");
     return movies;
   },
 );
@@ -54,6 +54,7 @@ export const moviesSlice = createSlice({
     builder
       .addCase(getMoviesByFilter.pending, (state, action) => {
         state[action.meta.arg].loading = true;
+        state[action.meta.arg].error = "";
       })
       .addCase(getMoviesByFilter.fulfilled, (state, action) => {
         const movies_filter = action.meta.arg;
@@ -67,6 +68,13 @@ export const moviesSlice = createSlice({
         state.loadedInitialState = true;
       })
       // TODO: Add rejected
+      .addCase(getMoviesByFilter.rejected, (state, action) => {
+        const movies_filter = action.meta.arg;
+
+        console.log(action);
+        state[movies_filter].loading = false;
+        state[movies_filter].error = action.error.message;
+      })
       // getNextPage
       .addCase(getNextPage.pending, (state, action) => {
         state[action.meta.arg].loading = true;
