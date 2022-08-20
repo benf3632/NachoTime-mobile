@@ -10,20 +10,22 @@ const ShowDetailsCard = ({ onPress, details, style }) => {
   const [loadingImage, setLoadingImage] = useState(true);
   return (
     <TouchableOpacity style={style} onPress={onPress}>
-      <SkeletonContent
-        boneColor="black"
-        duration={2000}
-        containerStyle={{
-          flex: 1,
-          height: 150,
-          width: 110,
-          position: "absolute",
-          marginRight: 10,
-        }}
-        isLoading={loadingImage}
-        layout={[
-          { key: "imageCover", width: 110, height: 150 },
-        ]}></SkeletonContent>
+      {loadingImage && (
+        <SkeletonContent
+          boneColor="black"
+          duration={2000}
+          containerStyle={{
+            flex: 1,
+            height: 150,
+            width: 110,
+            position: "absolute",
+            marginRight: 10,
+          }}
+          isLoading={loadingImage}
+          layout={[
+            { key: "imageCover", width: 110, height: 150 },
+          ]}></SkeletonContent>
+      )}
       <Image
         onLoadEnd={() => {
           setLoadingImage(false);
