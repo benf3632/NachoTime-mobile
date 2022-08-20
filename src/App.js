@@ -55,23 +55,7 @@ const App = () => {
       <NavigationContainer theme={navTheme}>
         <Tab.Navigator
           tabBar={props => <TabBar {...props} />}
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
-              if (route.name === "Home") {
-                iconName = "home";
-              } else if (route.name === "Downloads") {
-                iconName = "md-download";
-              } else if (route.name === "Search") {
-                iconName = "search";
-              }
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: "white",
-            tabBarInactiveTintColor: "gray",
-            tabBarStyle: {
-              backgroundColor: colors.background_accent,
-            },
+          screenOptions={() => ({
             headerShown: false,
             tabBarHideOnKeyboard: true,
           })}>

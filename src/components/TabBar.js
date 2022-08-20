@@ -7,23 +7,13 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 const TabBar = ({ state, descriptors, navigation }) => {
   const [width, setWidth] = React.useState(0);
+  const [iconWidth, setIconWidth] = React.useState(0);
 
   const indicatorPosition = React.useRef(new Animated.Value(0)).current;
 
   const animateIndicator = index => {
-    const numRoutes = state.routes.length;
-    let toValue = 0;
-    if (index === numRoutes - 1) {
-      toValue = width * index - width * 0.15;
-    } else if (index === 0) {
-      toValue = 0;
-    } else if (index < Math.floor(numRoutes / 2)) {
-      toValue = width * index - width * 0.095;
-    } else {
-      toValue = width * index - width * 0.1;
-    }
     Animated.spring(indicatorPosition, {
-      toValue,
+      toValue: width * index,
       duration: 100,
       useNativeDriver: true,
     }).start();
@@ -31,9 +21,6 @@ const TabBar = ({ state, descriptors, navigation }) => {
 
   return (
     <View
-      onLayout={event => {
-        setWidth(event.nativeEvent.layout.width / state.routes.length);
-      }}
       style={{
         paddingHorizontal: "2%",
         paddingVertical: "3%",
@@ -80,11 +67,19 @@ const TabBar = ({ state, descriptors, navigation }) => {
         };
         return (
           <TouchableOpacity
+            onLayout={event => {
+              setWidth(Math.max(width, event.nativeEvent.layout.width));
+            }}
             style={{ flex: 1, alignItems: "center" }}
             onPress={onPress}
             key={route.key}
             testID={options.tabBarTestID}>
             <Ionicons
+              onLayout={event => {
+                setIconWidth(
+                  Math.max(iconWidth, event.nativeEvent.layout.width),
+                );
+              }}
               name={iconName}
               size={30}
               color={isFocused ? "white" : "gray"}
@@ -97,11 +92,11 @@ const TabBar = ({ state, descriptors, navigation }) => {
           position: "absolute",
           backgroundColor: "white",
           top: 0,
-          width: width / 1.5,
+          width: iconWidth * 1.5,
           height: "20%",
           borderRadius: width,
           overflow: "hidden",
-          left: width * 0.25,
+          left: width / 2 - iconWidth / 2,
           transform: [
             {
               translateX: indicatorPosition,
