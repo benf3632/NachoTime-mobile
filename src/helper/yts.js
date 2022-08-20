@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { Axios, AxiosError } from "axios";
 
 const baseURL = "https://yts.mx/api/v2";
 
-const ytsAxiosInstance = axios.create({ baseURL: baseURL });
+const ytsAxiosInstance = axios.create({ baseURL: baseURL, timeout: 10000 });
 
 export async function fetchMoviesByFilter(filter, page = 1, limit = 10) {
   try {
@@ -13,7 +13,11 @@ export async function fetchMoviesByFilter(filter, page = 1, limit = 10) {
     if (result.data.data.movie_count <= 0) return [];
     return result.data.data.movies;
   } catch (error) {
-    throw new Error(error);
+    if (error.code === AxiosError.ECONNABORTED) {
+      throw new Error("Failed to fetch movies");
+    } else {
+      throw new Error("Undefined Error");
+    }
   }
 }
 
@@ -26,6 +30,10 @@ export async function queryMovies(query, page = 1, limit = 10) {
     if (result.data.data.movie_count <= 0) return [];
     return result.data.data.movies;
   } catch (error) {
-    throw new Error(error);
+    if (error.code === AxiosError.ECONNABORTED) {
+      throw new Error("Failed to fetch movies");
+    } else {
+      throw new Error("Undefined Error");
+    }
   }
 }
