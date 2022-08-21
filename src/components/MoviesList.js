@@ -85,7 +85,11 @@ const MoviesList = ({ onSelect }) => {
           onEndReachedThreshold={0.5}
           onEndReached={() => fetchNextPage("download_count")}
           renderItem={({ item }) => (
-            <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
+            <ShowDetailsCard
+              style={{ marginRight: 10 }}
+              onPress={() => onSelect(item)}
+              details={item}
+            />
           )}
         />
       )}
@@ -112,7 +116,11 @@ const MoviesList = ({ onSelect }) => {
             `latestMovies_${item.imdb_code}_${index}`
           }
           renderItem={({ item }) => (
-            <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
+            <ShowDetailsCard
+              style={{ marginRight: 10 }}
+              onPress={() => onSelect(item)}
+              details={item}
+            />
           )}
         />
       )}
@@ -139,7 +147,11 @@ const MoviesList = ({ onSelect }) => {
             `ratedMovies_${item.imdb_code}_${index}`
           }
           renderItem={({ item }) => (
-            <ShowDetailsCard onPress={() => onSelect(item)} details={item} />
+            <ShowDetailsCard
+              style={{ marginRight: 10 }}
+              onPress={() => onSelect(item)}
+              details={item}
+            />
           )}
         />
       )}

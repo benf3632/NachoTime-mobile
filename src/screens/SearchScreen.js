@@ -14,22 +14,28 @@ import colors from "@app/constants/colors";
 
 // helpers
 import { queryMovies } from "@app/helper/yts";
+import LoadingCard from "@app/components/LoadingCard";
 
 const SearchScreen = () => {
   const [searchInput, onSearchInputChange] = useState("");
   const [searchShowType, setSearchShowType] = useState(0);
   const [searchResult, setSearchResults] = useState([]);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [showDetailsModalVisbile, setShowDetailsModalVisbile] = useState(false);
   const [currentDetails, setCurrentDetails] = useState(null);
 
   const search = async () => {
+    setIsSearchLoading(true);
     let searchResults;
-    if (searchShowType === 0) {
+    if (!searchInput) {
+      searchResults = [];
+    } else if (searchShowType === 0) {
       searchResults = await queryMovies(searchInput, 1, 20);
     } else {
       searchResults = [];
     }
     setSearchResults(searchResults);
+    setIsSearchLoading(false);
   };
 
   const handleDetailsCardPressed = item => {
@@ -76,18 +82,21 @@ const SearchScreen = () => {
         ]}
         onValueChange={setSearchShowType}
       />
-      <FlatList
-        data={searchResult}
-        keyExtractor={item => item.imdb_code}
-        numColumns={3}
-        renderItem={({ item }) => (
-          <ShowDetailsCard
-            style={styles.showCard}
-            onPress={() => handleDetailsCardPressed(item)}
-            details={item}
-          />
-        )}
-      />
+      <View style={styles.searchResultsContainer}>
+        <FlatList
+          data={searchResult}
+          keyExtractor={item => item.imdb_code}
+          ListFooterComponent={isSearchLoading ? <LoadingCard /> : <></>}
+          numColumns={3}
+          renderItem={({ item }) => (
+            <ShowDetailsCard
+              style={styles.showCard}
+              onPress={() => handleDetailsCardPressed(item)}
+              details={item}
+            />
+          )}
+        />
+      </View>
       {currentDetails && (
         <DetailsModal
           closeModalCallback={handleCloseModal}
@@ -125,6 +134,10 @@ const styles = StyleSheet.create({
   },
   showTypeSelector: {
     marginBottom: "5%",
+  },
+  searchResultsContainer: {
+    flex: 1,
+    flexDirection: "row",
   },
   showCard: {
     paddingBottom: "5%",

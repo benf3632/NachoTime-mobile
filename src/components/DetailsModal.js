@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "700",
     fontSize: 32,
+    textAlign: "center",
   },
   showDataContainer: {
     flexDirection: "row",
