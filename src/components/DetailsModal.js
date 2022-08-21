@@ -87,7 +87,7 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
                 <Text style={styles.showDataText}>{details.runtime} min</Text>
                 <View style={styles.verticalSeperator} />
                 <Text style={styles.showDataText}>
-                  {details.genres.join(", ")}
+                  {details.genres?.join(", ")}
                 </Text>
               </View>
             </LinearGradient>
@@ -165,7 +165,9 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
         <TouchableOpacity
           style={styles.closeButton}
           onPress={closeModalCallback}>
-          <FontAwesome name="chevron-down" size={20} color="black" />
+          {/* <LinearGradient colors={["#00000000", "#ffffff0f"]}> */}
+          <FontAwesome name="chevron-down" size={20} color="white" />
+          {/* </LinearGradient> */}
         </TouchableOpacity>
       </View>
     </Modal>
