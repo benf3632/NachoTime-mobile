@@ -9,7 +9,7 @@ import colors from "@app/constants/colors";
 const ShowDetailsCard = ({ onPress, details, style }) => {
   const [loadingImage, setLoadingImage] = useState(true);
   return (
-    <TouchableOpacity style={style} onPress={onPress}>
+    <TouchableOpacity disabled={!!details} style={style} onPress={onPress}>
       <Image
         onLoadEnd={() => {
           setLoadingImage(false);
