@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     overflow: "hidden",
+    borderRadius: 10,
   },
   searchBar: {
     color: colors.primary,
