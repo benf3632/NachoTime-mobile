@@ -21,12 +21,18 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useDispatch } from "react-redux";
 
 // constants
 import colors from "@app/constants/colors";
 import SelectDropdown from "react-native-select-dropdown";
 
+// actions
+import { addNewDownload } from "@app/slices/downloadsSlice";
+
 const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
+  const dispatch = useDispatch();
+
   const [showBackdropURL, setShowBackdropURL] = useState(null);
   const [showCast, setShowCast] = useState(null);
   const [availableQualities, setAvailableQualities] = useState([]);
@@ -48,6 +54,18 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
       showQualities.add(torrent.quality);
     });
     setAvailableQualities(Array.from(showQualities));
+  };
+
+  const addMovieToDownload = downloadType => {
+    // TODO: check if the user selected a quality
+    const torrentInfo = selectBestTorrent(details.torrents, selectedQuality);
+    dispatch(
+      addNewDownload({
+        key: details.hash,
+        imdbid: details.imdb_code,
+        type: downloadType,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -121,7 +139,9 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
                   />
                 </View>
                 {/* Watch Button */}
-                <TouchableOpacity style={styles.moviePlayIcon}>
+                <TouchableOpacity
+                  onPress={() => addMovieToDownload("cache")}
+                  style={styles.moviePlayIcon}>
                   <MaterialCommunityIcons
                     name="movie-play"
                     size={25}
@@ -129,7 +149,8 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
                   />
                 </TouchableOpacity>
                 {/* Download Button */}
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => addMovieToDownload("download")}>
                   <AntDesign name="download" size={25} color={colors.accent} />
                 </TouchableOpacity>
               </View>

@@ -1,28 +1,41 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  all_downloads: {},
   queue: [],
   downloaded: [],
   cached: [],
+  all_downloads: {},
 };
 
 export const downloadsSlice = createSlice({
   name: "downloads",
   initialState,
   reducers: {
-    addNewDownload(state, action) {
+    // TODO: create another function called add to queue
+    startDownload(state, action) {
       const key = action.payload.key;
-      state.all_downloads[key] = {
-        name: action.payload.name,
-        state: action.payload.state,
-      };
-      // TODO: start downloading
+      if (state.all_downloads[key]?.type === "cache") {
+        // TODO: start downloading torrent
+      } else if (
+        state.all_downloads[key]?.type === "download" &&
+        action.payload.type === "cache"
+      ) {
+        // TODO: start downloading torrent
+      } else if (!state.all_downloads[key]) {
+        state.all_downloads[key] = {
+          name: action.payload.name,
+          state: action.payload.type,
+        };
+        state.queue.push(key);
+        // TODO: start downloading if it's first in the queue
+      }
     },
-    changeDownloadState(state, action) {
+    addToQueue(state, action) {
       const key = action.payload.key;
       if (state.all_downloads[key]) {
-        state.all_downloads[key].state = action.payload.state;
+        if (!state.queue.find(value => value === key)) return;
+        state.all_downloads[key].type = "download";
+        state.queue.push(key);
       }
     },
     stopDownload(state, action) {
@@ -34,9 +47,9 @@ export const downloadsSlice = createSlice({
     deleteDownload(state, action) {
       const key = action.payload.key;
       if (state.all_downloads[key]) {
+        // TODO: stop downloading and delete files
         delete state.all_downloads[key];
       }
-      // TODO: stop downloading and delete files
     },
   },
 });
