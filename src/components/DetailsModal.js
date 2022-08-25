@@ -28,7 +28,10 @@ import colors from "@app/constants/colors";
 import SelectDropdown from "react-native-select-dropdown";
 
 // actions
-import { addNewDownload } from "@app/slices/downloadsSlice";
+import { addNewDownload, addCacheDownload } from "@app/slices/downloadsSlice";
+
+// utils
+import { selectBestTorrent } from "@app/utils/torrent";
 
 const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
   const dispatch = useDispatch();
@@ -59,11 +62,21 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
   const addMovieToDownload = downloadType => {
     // TODO: check if the user selected a quality
     const torrentInfo = selectBestTorrent(details.torrents, selectedQuality);
+    const movieDetails = {
+      imdb_code: details.imdb_code,
+      title: details.title,
+      year: details.year,
+      cover_image: details.large_cover_image,
+    };
+    const torrentDetails = {};
+    const addDownloadFunc =
+      downloadType === "cache" ? addCacheDownload : addDownload;
     dispatch(
-      addNewDownload({
-        key: details.hash,
-        imdbid: details.imdb_code,
-        type: downloadType,
+      addDownloadFunc({
+        key: torrentInfo.hash,
+        showType: "movie",
+        torrentDetails: torrentDetails,
+        showDetails: movieDetails,
       }),
     );
   };
