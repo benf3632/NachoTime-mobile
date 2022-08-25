@@ -12,23 +12,32 @@ export const downloadsSlice = createSlice({
   initialState,
   reducers: {
     // TODO: create another function called add to queue
-    startDownload(state, action) {
+    addDownload(state, action) {
       const key = action.payload.key;
-      if (state.all_downloads[key]?.type === "cache") {
-        // TODO: start downloading torrent
-      } else if (
-        state.all_downloads[key]?.type === "download" &&
-        action.payload.type === "cache"
-      ) {
-        // TODO: start downloading torrent
-      } else if (!state.all_downloads[key]) {
+      if (!state.all_downloads[key]) {
         state.all_downloads[key] = {
-          name: action.payload.name,
-          state: action.payload.type,
+          key: key,
+          showType: action.payload.showType,
+          showDetails: action.payload.showDetails,
+          downloadType: "download",
         };
         state.queue.push(key);
-        // TODO: start downloading if it's first in the queue
+        if (state.queue.length === 1) {
+          // TODO: start downloading
+        }
       }
+    },
+    addCacheDownload(state, action) {
+      const key = action.payload.key;
+      if (!state.all_downloads[key]) {
+        state.all_downloads[key] = {
+          key: key,
+          showType: action.payload.showType,
+          showDetails: action.payload.showDetails,
+          downloadType: "cache",
+        };
+      }
+      // TODO: start downloading the show
     },
     addToQueue(state, action) {
       const key = action.payload.key;
@@ -55,7 +64,8 @@ export const downloadsSlice = createSlice({
 });
 
 export const {
-  addNewDownload,
+  addDownload,
+  addCacheDownload,
   changeDownloadState,
   deleteDownload,
   stopDownload,
