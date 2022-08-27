@@ -14,7 +14,7 @@ import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
 // helpers
-import { fetchShowBackdropURL, fetchCast } from "@app/helper/tmbd";
+import { fetchShowBackdropURL, fetchCast } from "@app/helpers/tmbd";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -28,10 +28,10 @@ import colors from "@app/constants/colors";
 import SelectDropdown from "react-native-select-dropdown";
 
 // actions
-import { addNewDownload, addCacheDownload } from "@app/slices/downloadsSlice";
+import { addDownload, addCacheDownload } from "@app/slices/downloadsSlice";
 
 // utils
-import { selectBestTorrent } from "@app/utils/torrent";
+import { selectBestTorrent, generateYTSMagnetURL } from "@app/utils/torrent";
 
 const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
   const dispatch = useDispatch();
@@ -68,7 +68,15 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
       year: details.year,
       cover_image: details.large_cover_image,
     };
-    const torrentDetails = {};
+    const magnet = generateYTSMagnetURL(torrentInfo.hash);
+    const torrentDetails = {
+      hash: torrentInfo.hash,
+      seeds: torrentInfo.seeds,
+      size: torrentInfo.size,
+      magnet: magnet,
+      progress: 0,
+      path: "",
+    };
     const addDownloadFunc =
       downloadType === "cache" ? addCacheDownload : addDownload;
     dispatch(
