@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // helpers
-import { fetchMoviesByFilter } from "@app/helper/yts";
+import { fetchMoviesByFilter } from "@app/helpers/yts";
 
 const initialState = {
   download_count: {

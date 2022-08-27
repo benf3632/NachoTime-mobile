@@ -13,7 +13,7 @@ import ShowDetailsCard from "@app/components/ShowDetailsCard";
 import colors from "@app/constants/colors";
 
 // helpers
-import { queryMovies } from "@app/helper/yts";
+import { queryMovies } from "@app/helpers/yts";
 import LoadingCard from "@app/components/LoadingCard";
 
 const SearchScreen = () => {
