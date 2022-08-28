@@ -29,7 +29,7 @@ export const downloadsSlice = createSlice({
           state.current_download = key;
         }
       } else if (state.all_downloads[key].downloadType === "cache") {
-        state.all_downloads[key].downloadType === "download";
+        state.all_downloads[key].downloadType = "download";
         state.queue.push(key);
       }
     },
