@@ -12,6 +12,9 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
+import { addListener } from "react-native-torrent-stream";
+import { useDispatch } from "react-redux";
+import SelectDropdown from "react-native-select-dropdown";
 
 // helpers
 import { fetchShowBackdropURL, fetchCast } from "@app/helpers/tmbd";
@@ -21,11 +24,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { useDispatch } from "react-redux";
 
 // constants
 import colors from "@app/constants/colors";
-import SelectDropdown from "react-native-select-dropdown";
 
 // actions
 import { addDownload, addCacheDownload } from "@app/slices/downloadsSlice";
@@ -96,6 +97,15 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
     setSelectedQuality(null);
   }, [details]);
 
+  useEffect(() => {
+    // console.log(addListener);
+    const torrentStatusListener = addListener("status", event => {
+      console.log(event);
+    });
+    return () => {
+      torrentStatusListener.remove();
+    };
+  }, []);
   return (
     <Modal
       onRequestClose={closeModalCallback}

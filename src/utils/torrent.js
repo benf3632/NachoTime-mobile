@@ -18,5 +18,5 @@ const ytsTrackers = [
 ];
 
 export const generateYTSMagnetURL = hash => {
-  return `magnet:?xt:btih:${hash}&tr=${ytsTrackers.join("&tr=")}`;
+  return `magnet:?xt=urn:btih:${hash}&tr=${ytsTrackers.join("&tr=")}`;
 };

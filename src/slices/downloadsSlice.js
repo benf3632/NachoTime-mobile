@@ -1,17 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import { startTorrent } from "react-native-torrent-stream";
+
 const initialState = {
   queue: [],
-  downloaded: [],
-  cached: [],
   all_downloads: {},
+  current_download: "",
 };
 
 export const downloadsSlice = createSlice({
   name: "downloads",
   initialState,
   reducers: {
-    // TODO: create another function called add to queue
     addDownload(state, action) {
       const key = action.payload.key;
       if (!state.all_downloads[key]) {
@@ -19,12 +19,18 @@ export const downloadsSlice = createSlice({
           key: key,
           showType: action.payload.showType,
           showDetails: action.payload.showDetails,
+          torrentDetails: action.payload.torrentDetails,
           downloadType: "download",
         };
         state.queue.push(key);
+
         if (state.queue.length === 1) {
-          // TODO: start downloading
+          startTorrent(state.all_downloads[key].torrentDetails.magnet);
+          state.current_download = key;
         }
+      } else if (state.all_downloads[key].downloadType === "cache") {
+        state.all_downloads[key].downloadType === "download";
+        state.queue.push(key);
       }
     },
     addCacheDownload(state, action) {
@@ -34,10 +40,12 @@ export const downloadsSlice = createSlice({
           key: key,
           showType: action.payload.showType,
           showDetails: action.payload.showDetails,
+          torrentDetails: action.payload.torrentDetails,
           downloadType: "cache",
         };
       }
-      // TODO: start downloading the show
+      startTorrent(state.all_downloads[key].torrentDetails.magnet);
+      state.current_download = key;
     },
     addToQueue(state, action) {
       const key = action.payload.key;
