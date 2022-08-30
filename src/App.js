@@ -14,6 +14,7 @@ import { store } from "./store";
 // screens
 import HomeScreen from "./screens/HomeScreen";
 import SearchScreen from "./screens/SearchScreen";
+import VideoScreen from "./screens/VideoScreen";
 
 // constants
 import colors from "./constants/colors";
@@ -21,8 +22,9 @@ import TabBar from "./components/TabBar";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Main = createNativeStackNavigator();
 
-const HomeScreenStack = () => {
+const HomeNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -31,6 +33,23 @@ const HomeScreenStack = () => {
       }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
     </Stack.Navigator>
+  );
+};
+
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      tabBar={props => <TabBar {...props} />}
+      screenOptions={() => ({
+        headerShown: false,
+        tabBarHideOnKeyboard: true,
+      })}>
+      <Tab.Screen name="Home" component={HomeScreenStack} />
+      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Favorites" component={DownloadsScreen} />
+      <Tab.Screen name="Downloads" component={DownloadsScreen} />
+      <Tab.Screen name="Settings" component={DownloadsScreen} />
+    </Tab.Navigator>
   );
 };
 
@@ -55,18 +74,10 @@ const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <NavigationContainer theme={navTheme}>
-          <Tab.Navigator
-            tabBar={props => <TabBar {...props} />}
-            screenOptions={() => ({
-              headerShown: false,
-              tabBarHideOnKeyboard: true,
-            })}>
-            <Tab.Screen name="Home" component={HomeScreenStack} />
-            <Tab.Screen name="Search" component={SearchScreen} />
-            <Tab.Screen name="Favorites" component={DownloadsScreen} />
-            <Tab.Screen name="Downloads" component={DownloadsScreen} />
-            <Tab.Screen name="Settings" component={DownloadsScreen} />
-          </Tab.Navigator>
+          <Main.Navigator>
+            <Main.Screen name="App" component={TabNavigator} />
+            <Main.Screen name="Video" component={VideoScreen} />
+          </Main.Navigator>
         </NavigationContainer>
       </Provider>
     </GestureHandlerRootView>
