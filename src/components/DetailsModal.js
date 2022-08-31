@@ -78,6 +78,7 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
       magnet: magnet,
       progress: 0,
       path: "",
+      quality: selectedQuality,
     };
     const addDownloadFunc =
       downloadType === "cache" ? addCacheDownload : addDownload;
@@ -103,12 +104,12 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
 
   useEffect(() => {
     // console.log(addListener);
-    const torrentStatusListener = addListener("status", event => {
-      console.log(event);
-    });
-    return () => {
-      torrentStatusListener.remove();
-    };
+    // const torrentStatusListener = addListener("status", event => {
+    //   console.log(event);
+    // });
+    // return () => {
+    //   torrentStatusListener.remove();
+    // };
   }, []);
   return (
     <Modal
