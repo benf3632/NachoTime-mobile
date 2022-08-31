@@ -44,7 +44,7 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarHideOnKeyboard: true,
       })}>
-      <Tab.Screen name="Home" component={HomeScreenStack} />
+      <Tab.Screen name="Home" component={HomeNavigator} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Favorites" component={DownloadsScreen} />
       <Tab.Screen name="Downloads" component={DownloadsScreen} />
@@ -74,7 +74,11 @@ const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <NavigationContainer theme={navTheme}>
-          <Main.Navigator>
+          <Main.Navigator
+            screenOptions={{
+              headerShown: false,
+              presentation: "transparentModal",
+            }}>
             <Main.Screen name="App" component={TabNavigator} />
             <Main.Screen name="Video" component={VideoScreen} />
           </Main.Navigator>
