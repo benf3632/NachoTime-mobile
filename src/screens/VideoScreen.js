@@ -16,6 +16,8 @@ import Slider from "@react-native-community/slider";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "@app/constants/colors";
+import { useSelector } from "react-redux";
+import { selectCurrentDownload } from "@app/slices/downloadsSlice";
 
 const formatSecondsToHHMMSS = seconds => {
   return new Date(seconds * 1000).toISOString().substring(11, 19);
@@ -23,8 +25,9 @@ const formatSecondsToHHMMSS = seconds => {
 
 const VideoScreen = () => {
   const navigation = useNavigation();
-  const videoSource =
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+
+  const currentDownload = useSelector(selectCurrentDownload);
+  const videoSource = currentDownload?.torrentDetails.path || "background";
 
   const player = useRef(null);
 
