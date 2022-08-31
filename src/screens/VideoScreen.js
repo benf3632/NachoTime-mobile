@@ -8,12 +8,21 @@ import {
   Animated,
 } from "react-native";
 import Video from "react-native-video";
+import { useNavigation } from "@react-navigation/native";
+import Orientation from "react-native-orientation";
+import Slider from "@react-native-community/slider";
 
 // icons
-import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import colors from "@app/constants/colors";
+
+const formatSecondsToHHMMSS = seconds => {
+  return new Date(seconds * 1000).toISOString().substring(11, 19);
+};
 
 const VideoScreen = () => {
+  const navigation = useNavigation();
   const videoSource =
     "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
@@ -202,7 +211,7 @@ const VideoScreen = () => {
                 onValueChange={handleSliderValueChange}
                 onSlidingComplete={handleSlidingComplete}
                 onSlidingStart={handleSlidingStarted}
-                value={currentTime / duration}
+                value={duration !== 0 ? currentTime / duration : 0}
                 style={{ flex: 2 }}
                 minimumTrackTintColor={colors.accent}
                 thumbTintColor={colors.accent}
