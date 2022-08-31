@@ -15,6 +15,7 @@ import ReadMore from "@fawazahmed/react-native-read-more";
 import { addListener } from "react-native-torrent-stream";
 import { useDispatch } from "react-redux";
 import SelectDropdown from "react-native-select-dropdown";
+import { useNavigation } from "@react-navigation/native";
 
 // helpers
 import { fetchShowBackdropURL, fetchCast } from "@app/helpers/tmbd";
@@ -36,7 +37,7 @@ import { selectBestTorrent, generateYTSMagnetURL } from "@app/utils/torrent";
 
 const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
   const dispatch = useDispatch();
-
+  const navigation = useNavigation();
   const [showBackdropURL, setShowBackdropURL] = useState(null);
   const [showCast, setShowCast] = useState(null);
   const [availableQualities, setAvailableQualities] = useState([]);
@@ -88,6 +89,9 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
         showDetails: movieDetails,
       }),
     );
+    if (downloadType === "cache") {
+      navigation.navigate("Video");
+    }
   };
 
   useEffect(() => {
