@@ -6,17 +6,23 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import Video from "react-native-video";
 import { useNavigation } from "@react-navigation/native";
 import Orientation from "react-native-orientation";
 import Slider from "@react-native-community/slider";
+import { addListener } from "react-native-torrent-stream";
+import { useSelector } from "react-redux";
 
 // icons
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+// constants
 import colors from "@app/constants/colors";
-import { useSelector } from "react-redux";
+
+// selectors
 import { selectCurrentDownload } from "@app/slices/downloadsSlice";
 
 const formatSecondsToHHMMSS = seconds => {
@@ -31,7 +37,8 @@ const VideoScreen = () => {
 
   const player = useRef(null);
 
-  const [playerPaused, setPlayerPaused] = useState(false);
+  const [playerPaused, setPlayerPaused] = useState(true);
+  const [buffering, setBuffering] = useState(true);
   const [showControls, setShowControls] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -125,17 +132,25 @@ const VideoScreen = () => {
         Orientation.lockToPortrait();
       },
     );
+    const torrentStatusListener = addListener("status", status => {
+      // console.log(status);
+      if (buffering && status.buffer === "100") {
+        setBuffering(false);
+        // TODO: set torrent to bufferd
+      }
+    });
     Orientation.lockToLandscape();
     player.current.presentFullscreenPlayer();
+    startControlsDisplayAnimation();
     return () => {
       unsubscribeBeforeRemove();
+      torrentStatusListener.remove();
     };
   }, []);
 
   useEffect(() => {
-    console.log("Set Video Source");
     setVideoSource(currentDownload?.torrentDetails.path || "background");
-  }, [currentDownload?.torrentDetails.path]);
+  }, [currentDownload.torrentDetails.path]);
 
   return (
     <View style={{ height: "100%", width: "100%" }}>
@@ -171,7 +186,7 @@ const VideoScreen = () => {
               opacity: controlsViewAnimation,
             }}>
             <Text style={{ textAlign: "center", color: "white" }}>
-              Buck Bunny
+              {currentDownload?.showDetails.title}
             </Text>
             {/* Play Pause controls */}
             <View
@@ -188,13 +203,19 @@ const VideoScreen = () => {
                   color="white"
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={togglePlayPause}>
-                <Ionicons
-                  name={playerPaused ? "play" : "pause"}
-                  size={60}
-                  color="white"
-                />
-              </TouchableOpacity>
+              {videoSource === "background" ||
+              videoSource === "" ||
+              buffering ? (
+                <ActivityIndicator size="large" color={colors.primary} />
+              ) : (
+                <TouchableOpacity onPress={togglePlayPause}>
+                  <Ionicons
+                    name={playerPaused ? "play" : "pause"}
+                    size={60}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              )}
               <TouchableOpacity style={{ paddingLeft: "9%" }}>
                 <MaterialCommunityIcons
                   name="fast-forward-15"
