@@ -73,6 +73,16 @@ const VideoScreen = () => {
     setCurrentTime(params.currentTime);
   };
 
+  const fastForward = () => {
+    resetControlsTimeout();
+    player.current.seek(Math.floor(currentTime) + 15);
+  };
+
+  const rewind = () => {
+    resetControlsTimeout();
+    player.current.seek(Math.floor(currentTime) - 15);
+  };
+
   const handleSliderValueChange = value => {
     setCurrentTime(value * duration);
   };
@@ -124,6 +134,10 @@ const VideoScreen = () => {
     });
   };
 
+  const onSeek = seek => {
+    setCurrentTime(seek.currentTime);
+  };
+
   useEffect(() => {
     const unsubscribeBeforeRemove = navigation.addListener(
       "beforeRemove",
@@ -161,6 +175,7 @@ const VideoScreen = () => {
         <Video
           ref={player}
           onLoad={onVideoLoad}
+          onSeek={onSeek}
           onProgress={onVideoProgress}
           paused={playerPaused}
           style={{ width: "100%", height: "100%" }}
@@ -196,7 +211,9 @@ const VideoScreen = () => {
                 justifyContent: "center",
                 alignItems: "center",
               }}>
-              <TouchableOpacity style={{ paddingRight: "10%" }}>
+              <TouchableOpacity
+                onPress={rewind}
+                style={{ paddingRight: "10%" }}>
                 <MaterialCommunityIcons
                   name="rewind-15"
                   size={50}
@@ -216,7 +233,9 @@ const VideoScreen = () => {
                   />
                 </TouchableOpacity>
               )}
-              <TouchableOpacity style={{ paddingLeft: "9%" }}>
+              <TouchableOpacity
+                onPress={fastForward}
+                style={{ paddingLeft: "9%" }}>
                 <MaterialCommunityIcons
                   name="fast-forward-15"
                   size={50}
