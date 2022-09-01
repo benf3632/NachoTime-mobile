@@ -27,7 +27,7 @@ const VideoScreen = () => {
   const navigation = useNavigation();
 
   const currentDownload = useSelector(selectCurrentDownload);
-  const videoSource = currentDownload?.torrentDetails.path || "background";
+  const [videoSource, setVideoSource] = useState("background");
 
   const player = useRef(null);
 
@@ -121,8 +121,8 @@ const VideoScreen = () => {
     const unsubscribeBeforeRemove = navigation.addListener(
       "beforeRemove",
       () => {
-        Orientation.lockToPortrait();
         player.current.dismissFullscreenPlayer();
+        Orientation.lockToPortrait();
       },
     );
     Orientation.lockToLandscape();
@@ -131,6 +131,11 @@ const VideoScreen = () => {
       unsubscribeBeforeRemove();
     };
   }, []);
+
+  useEffect(() => {
+    console.log("Set Video Source");
+    setVideoSource(currentDownload?.torrentDetails.path || "background");
+  }, [currentDownload?.torrentDetails.path]);
 
   return (
     <View style={{ height: "100%", width: "100%" }}>
