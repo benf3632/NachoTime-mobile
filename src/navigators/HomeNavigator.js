@@ -1,9 +1,9 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 
 // screens
 import HomeScreen from "@app/screens/HomeScreen";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const HomeNavigator = () => {
   return (

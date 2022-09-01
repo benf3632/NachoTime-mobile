@@ -7,9 +7,9 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 // components
-import DetailsModal from "@app/components/DetailsModal";
 import SelectSlider from "@app/components/SelectSlider";
 import MoviesList from "@app/components/MoviesList";
 
@@ -20,13 +20,11 @@ import colors from "@app/constants/colors";
 import nacho from "@app/assets/nacho.png";
 
 const HomeScreen = () => {
-  const [modalVisible, setModalVisibile] = useState(false);
-  const [currentDetails, setCurrentDetails] = useState(null);
+  const navigation = useNavigation();
   const [selected, setSelected] = useState(0);
 
   const handleDetailsCardPressed = details => {
-    setCurrentDetails(details);
-    setModalVisibile(true);
+    navigation.navigate("Details", { details });
   };
 
   const ShowsList = () => {
@@ -45,11 +43,6 @@ const HomeScreen = () => {
         </View>
       );
     }
-  };
-
-  const handleCloseModal = () => {
-    setModalVisibile(false);
-    setCurrentDetails(null);
   };
 
   return (
@@ -71,13 +64,6 @@ const HomeScreen = () => {
       <ScrollView ind style={styles.showsListContainer}>
         <ShowsList />
       </ScrollView>
-      {currentDetails && (
-        <DetailsModal
-          closeModalCallback={handleCloseModal}
-          modalVisible={modalVisible}
-          details={currentDetails}
-        />
-      )}
     </SafeAreaView>
   );
 };

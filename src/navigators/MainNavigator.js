@@ -1,13 +1,14 @@
 import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 
 // screens
 import VideoScreen from "@app/screens/VideoScreen";
 
 // navigators
 import MainAppTabNavigator from "@app/navigators/MainAppTabNavigator";
+import DetailsModal from "@app/components/DetailsModal";
 
-const Main = createNativeStackNavigator();
+const Main = createStackNavigator();
 
 function MainNavigator() {
   return (
@@ -15,8 +16,13 @@ function MainNavigator() {
       screenOptions={{
         headerShown: false,
       }}>
-      <Main.Screen name="MainApp" component={MainAppTabNavigator} />
-      <Main.Screen name="Video" component={VideoScreen} />
+      <Main.Group>
+        <Main.Screen name="MainApp" component={MainAppTabNavigator} />
+        <Main.Screen name="Video" component={VideoScreen} />
+      </Main.Group>
+      <Main.Group screenOptions={{ presentation: "modal" }}>
+        <Main.Screen name="Details" component={DetailsModal} />
+      </Main.Group>
     </Main.Navigator>
   );
 }

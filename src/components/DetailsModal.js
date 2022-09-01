@@ -35,7 +35,9 @@ import { addDownload, addCacheDownload } from "@app/slices/downloadsSlice";
 // utils
 import { selectBestTorrent, generateYTSMagnetURL } from "@app/utils/torrent";
 
-const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
+const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
+  const { details } = route.params;
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [showBackdropURL, setShowBackdropURL] = useState(null);
@@ -112,122 +114,117 @@ const DetailsModal = ({ details, modalVisible, closeModalCallback }) => {
     // };
   }, []);
   return (
-    <Modal
-      onRequestClose={closeModalCallback}
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}>
-      <View style={styles.modalContainer}>
-        <ScrollView style={styles.showModalScrollView}>
-          {/* Modal Header */}
-          <ImageBackground
-            source={{
-              uri: showBackdropURL,
-            }}
-            style={styles.showImageBackground}
-            resizeMode="cover">
-            {/* Favorite Icon */}
-            <LinearGradient
-              colors={["#00000000", colors.background]}
-              style={styles.showDetailsHeader}>
-              <Text style={styles.showTitle}>{details.title}</Text>
-              <View style={styles.showRatingContainer}>
-                <Ionicons name="star" color="yellow" size={18} />
-                <Text style={styles.showRatingText}>{details.rating}</Text>
-              </View>
-              <View style={styles.showDataContainer}>
-                <Text style={styles.showDataText}>{details.year}</Text>
-                <View style={styles.verticalSeperator} />
-                <Text style={styles.showDataText}>{details.runtime} min</Text>
-                <View style={styles.verticalSeperator} />
-                <Text style={styles.showDataText}>
-                  {details.genres?.join(", ")}
-                </Text>
-              </View>
-            </LinearGradient>
-          </ImageBackground>
-          {/* Modal Body */}
-          <View style={styles.modalBody}>
-            <View style={styles.summaryHeadingContainer}>
-              {/* Show Summary */}
-              <Text style={styles.headingText}>Story Line</Text>
-              {/* Show Actions */}
-              <View style={styles.actionsContainer}>
-                {/* Quality Chooser */}
-                <View style={styles.qualityDropdownContainer}>
-                  <SelectDropdown
-                    buttonStyle={styles.qualityDropdown}
-                    buttonTextStyle={styles.qualityOptionText}
-                    rowStyle={styles.qualityDropdownRow}
-                    rowTextStyle={styles.qualityDropdownRowText}
-                    defaultButtonText="Quality"
-                    renderDropdownIcon={() => (
-                      <FontAwesome
-                        name="chevron-down"
-                        size={12}
-                        color="white"
-                      />
-                    )}
-                    data={availableQualities}
-                    onSelect={selectedItem => {
-                      setSelectedQuality(selectedItem);
-                    }}
-                  />
-                </View>
-                {/* Watch Button */}
-                <TouchableOpacity
-                  onPress={() => addMovieToDownload("cache")}
-                  style={styles.moviePlayIcon}>
-                  <MaterialCommunityIcons
-                    name="movie-play"
-                    size={25}
-                    color={colors.accent}
-                  />
-                </TouchableOpacity>
-                {/* Download Button */}
-                <TouchableOpacity
-                  onPress={() => addMovieToDownload("download")}>
-                  <AntDesign name="download" size={25} color={colors.accent} />
-                </TouchableOpacity>
-              </View>
+    // <Modal
+    //   onRequestClose={closeModalCallback}
+    //   animationType="slide"
+    //   transparent={true}
+    //   visible={modalVisible}>
+    <View style={styles.modalContainer}>
+      <ScrollView style={styles.showModalScrollView}>
+        {/* Modal Header */}
+        <ImageBackground
+          source={{
+            uri: showBackdropURL,
+          }}
+          style={styles.showImageBackground}
+          resizeMode="cover">
+          {/* Favorite Icon */}
+          <LinearGradient
+            colors={["#00000000", colors.background]}
+            style={styles.showDetailsHeader}>
+            <Text style={styles.showTitle}>{details.title}</Text>
+            <View style={styles.showRatingContainer}>
+              <Ionicons name="star" color="yellow" size={18} />
+              <Text style={styles.showRatingText}>{details.rating}</Text>
             </View>
-            <ReadMore
-              numberOfLines={4}
-              seeMoreText="Read More"
-              seeMoreStyle={styles.readMoreText}
-              expandOnly
-              style={styles.text}>
-              {details.summary}
-            </ReadMore>
-            {/* Show Cast */}
-            <Text style={styles.headingText}>The Cast</Text>
-            {/* Cast */}
-            <FlatList
-              style={styles.castList}
-              horizontal
-              data={showCast}
-              renderItem={({ item }) => (
-                <View style={styles.castContainer}>
-                  <Image
-                    resizeMode="cover"
-                    style={styles.castImage}
-                    source={{ uri: item.image }}
-                  />
-                  <Text style={styles.castName}>{item.name}</Text>
-                </View>
-              )}
-            />
+            <View style={styles.showDataContainer}>
+              <Text style={styles.showDataText}>{details.year}</Text>
+              <View style={styles.verticalSeperator} />
+              <Text style={styles.showDataText}>{details.runtime} min</Text>
+              <View style={styles.verticalSeperator} />
+              <Text style={styles.showDataText}>
+                {details.genres?.join(", ")}
+              </Text>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+        {/* Modal Body */}
+        <View style={styles.modalBody}>
+          <View style={styles.summaryHeadingContainer}>
+            {/* Show Summary */}
+            <Text style={styles.headingText}>Story Line</Text>
+            {/* Show Actions */}
+            <View style={styles.actionsContainer}>
+              {/* Quality Chooser */}
+              <View style={styles.qualityDropdownContainer}>
+                <SelectDropdown
+                  buttonStyle={styles.qualityDropdown}
+                  buttonTextStyle={styles.qualityOptionText}
+                  rowStyle={styles.qualityDropdownRow}
+                  rowTextStyle={styles.qualityDropdownRowText}
+                  defaultButtonText="Quality"
+                  renderDropdownIcon={() => (
+                    <FontAwesome name="chevron-down" size={12} color="white" />
+                  )}
+                  data={availableQualities}
+                  onSelect={selectedItem => {
+                    setSelectedQuality(selectedItem);
+                  }}
+                />
+              </View>
+              {/* Watch Button */}
+              <TouchableOpacity
+                onPress={() => addMovieToDownload("cache")}
+                style={styles.moviePlayIcon}>
+                <MaterialCommunityIcons
+                  name="movie-play"
+                  size={25}
+                  color={colors.accent}
+                />
+              </TouchableOpacity>
+              {/* Download Button */}
+              <TouchableOpacity onPress={() => addMovieToDownload("download")}>
+                <AntDesign name="download" size={25} color={colors.accent} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </ScrollView>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={closeModalCallback}>
-          {/* <LinearGradient colors={["#00000000", "#ffffff0f"]}> */}
-          <FontAwesome name="chevron-down" size={20} color="white" />
-          {/* </LinearGradient> */}
-        </TouchableOpacity>
-      </View>
-    </Modal>
+          <ReadMore
+            numberOfLines={4}
+            seeMoreText="Read More"
+            seeMoreStyle={styles.readMoreText}
+            expandOnly
+            style={styles.text}>
+            {details.summary}
+          </ReadMore>
+          {/* Show Cast */}
+          <Text style={styles.headingText}>The Cast</Text>
+          {/* Cast */}
+          <FlatList
+            style={styles.castList}
+            horizontal
+            data={showCast}
+            renderItem={({ item }) => (
+              <View style={styles.castContainer}>
+                <Image
+                  resizeMode="cover"
+                  style={styles.castImage}
+                  source={{ uri: item.image }}
+                />
+                <Text style={styles.castName}>{item.name}</Text>
+              </View>
+            )}
+          />
+        </View>
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => navigation.goBack()}>
+        {/* <LinearGradient colors={["#00000000", "#ffffff0f"]}> */}
+        <FontAwesome name="chevron-down" size={20} color="white" />
+        {/* </LinearGradient> */}
+      </TouchableOpacity>
+    </View>
+    // </Modal>
   );
 };
 
