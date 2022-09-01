@@ -153,7 +153,6 @@ const VideoScreen = () => {
       // console.log(status);
       if (buffering && status.buffer === "100") {
         setBuffering(false);
-        // TODO: set torrent to bufferd
         dispatch(setBuffered({ key: currentDownload.key, buffered: true }));
       }
     });
