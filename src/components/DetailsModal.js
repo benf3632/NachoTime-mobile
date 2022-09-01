@@ -81,6 +81,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
       progress: 0,
       path: "",
       quality: selectedQuality,
+      buffered: false,
     };
     const addDownloadFunc =
       downloadType === "cache" ? addCacheDownload : addDownload;
@@ -104,21 +105,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
     setSelectedQuality(null);
   }, [details]);
 
-  useEffect(() => {
-    // console.log(addListener);
-    // const torrentStatusListener = addListener("status", event => {
-    //   console.log(event);
-    // });
-    // return () => {
-    //   torrentStatusListener.remove();
-    // };
-  }, []);
   return (
-    // <Modal
-    //   onRequestClose={closeModalCallback}
-    //   animationType="slide"
-    //   transparent={true}
-    //   visible={modalVisible}>
     <View style={styles.modalContainer}>
       <ScrollView style={styles.showModalScrollView}>
         {/* Modal Header */}
@@ -224,7 +211,6 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
         {/* </LinearGradient> */}
       </TouchableOpacity>
     </View>
-    // </Modal>
   );
 };
 

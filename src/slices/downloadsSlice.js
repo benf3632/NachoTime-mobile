@@ -52,6 +52,11 @@ export const downloadsSlice = createSlice({
       if (state.all_downloads[key].torrentDetails.path) return;
       state.all_downloads[key].torrentDetails.path = action.payload.path;
     },
+    setBuffered(state, action) {
+      const key = action.payload.key;
+      state.all_downloads[key].torrentDetails.buffered =
+        action.payload.buffered;
+    },
     addToQueue(state, action) {
       const key = action.payload.key;
       if (state.all_downloads[key]) {
@@ -83,6 +88,7 @@ export const {
   deleteDownload,
   stopDownload,
   setPath,
+  setBuffered,
 } = downloadsSlice.actions;
 
 export const selectCurrentDownload = state => {

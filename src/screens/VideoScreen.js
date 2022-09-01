@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import Orientation from "react-native-orientation";
 import Slider from "@react-native-community/slider";
 import { addListener } from "react-native-torrent-stream";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // icons
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -23,7 +23,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "@app/constants/colors";
 
 // selectors
-import { selectCurrentDownload } from "@app/slices/downloadsSlice";
+import { selectCurrentDownload, setBuffered } from "@app/slices/downloadsSlice";
 
 const formatSecondsToHHMMSS = seconds => {
   return new Date(seconds * 1000).toISOString().substring(11, 19);
@@ -31,6 +31,7 @@ const formatSecondsToHHMMSS = seconds => {
 
 const VideoScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const currentDownload = useSelector(selectCurrentDownload);
   const [videoSource, setVideoSource] = useState("background");
@@ -38,7 +39,9 @@ const VideoScreen = () => {
   const player = useRef(null);
 
   const [playerPaused, setPlayerPaused] = useState(true);
-  const [buffering, setBuffering] = useState(true);
+  const [buffering, setBuffering] = useState(
+    !currentDownload.torrentDetails.buffered,
+  );
   const [showControls, setShowControls] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -63,16 +66,6 @@ const VideoScreen = () => {
     resetControlsTimeout();
   };
 
-  const onVideoLoad = params => {
-    console.log(params);
-    setDuration(params.duration);
-  };
-
-  const onVideoProgress = params => {
-    if (isSliding) return;
-    setCurrentTime(params.currentTime);
-  };
-
   const fastForward = () => {
     resetControlsTimeout();
     player.current.seek(Math.floor(currentTime) + 15);
@@ -81,6 +74,16 @@ const VideoScreen = () => {
   const rewind = () => {
     resetControlsTimeout();
     player.current.seek(Math.floor(currentTime) - 15);
+  };
+
+  const onVideoLoad = params => {
+    console.log(params);
+    setDuration(params.duration);
+  };
+
+  const onVideoProgress = params => {
+    if (isSliding) return;
+    setCurrentTime(params.currentTime);
   };
 
   const handleSliderValueChange = value => {
@@ -151,6 +154,7 @@ const VideoScreen = () => {
       if (buffering && status.buffer === "100") {
         setBuffering(false);
         // TODO: set torrent to bufferd
+        dispatch(setBuffered({ key: currentDownload.key, buffered: true }));
       }
     });
     Orientation.lockToLandscape();
