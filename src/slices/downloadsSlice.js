@@ -57,6 +57,14 @@ export const downloadsSlice = createSlice({
       state.all_downloads[key].torrentDetails.buffered =
         action.payload.buffered;
     },
+    setProgress(state, action) {
+      const key = action.payload.key;
+      state.all_downloads[key].torrentDetails.progress =
+        action.payload.progress;
+      state.all_downloads[key].torrentDetails.seeds = action.payload.seeds;
+      state.all_downloads[key].torrentDetails.downloadSpeed =
+        action.payload.downloadSpeed;
+    },
     addToQueue(state, action) {
       const key = action.payload.key;
       if (state.all_downloads[key]) {
@@ -89,12 +97,23 @@ export const {
   stopDownload,
   setPath,
   setBuffered,
+  setProgress,
 } = downloadsSlice.actions;
 
 export const selectCurrentDownload = state => {
   console.log("State: ", state.downloads.current_download);
   if (!state.downloads.current_download) return null;
   return state.downloads.all_downloads[state.downloads.current_download];
+};
+
+export const selectDownloads = state => {
+  const downloadsArray = Object.values(state.downloads.all_downloads);
+  return downloadsArray.filter(value => value.downloadType === "download");
+};
+
+export const selectCachedDownloads = state => {
+  const downloadsArray = Object.values(state.downloads.all_downloads);
+  return downloadsArray.filter(value => value.downloadType === "cache");
 };
 
 export default downloadsSlice.reducer;

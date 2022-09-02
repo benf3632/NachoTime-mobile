@@ -10,11 +10,10 @@ import colors from "@app/constants/colors";
 import MainNavigator from "@app/navigators/MainNavigator";
 
 // actions
-import { setPath } from "@app/slices/downloadsSlice";
+import { setPath, setProgress } from "@app/slices/downloadsSlice";
 
 // selectors
 import { selectCurrentDownload } from "@app/slices/downloadsSlice";
-import { current } from "@reduxjs/toolkit";
 
 const navTheme = {
   ...DefaultTheme,
@@ -41,12 +40,29 @@ const MainApp = () => {
     [currentDownload],
   );
 
+  const statusCallback = useCallback(
+    status => {
+      console.log(status);
+      if (status.progress.startsWith("99.9")) {
+        dispatch(setProgress({ key: currentDownload.key, progress: "100.0" }));
+      } else if (currentDownload.torrentDetails.progress !== "100.0") {
+        dispatch(
+          setProgress({ key: currentDownload.key, progress: status.progress }),
+        );
+      }
+    },
+    [currentDownload],
+  );
+
   useEffect(() => {
     const torrentProgressListener = addListener("progress", progressCallback);
+    const torrentStatusListener = addListener("status", statusCallback);
     return () => {
       torrentProgressListener.remove();
+      torrentStatusListener.remove();
     };
-  }, [progressCallback]);
+  }, [progressCallback, statusCallback]);
+
   return (
     <NavigationContainer theme={navTheme}>
       <MainNavigator />
