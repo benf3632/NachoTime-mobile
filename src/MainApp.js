@@ -44,10 +44,22 @@ const MainApp = () => {
     status => {
       console.log(status);
       if (status.progress.startsWith("99.9")) {
-        dispatch(setProgress({ key: currentDownload.key, progress: "100.0" }));
+        dispatch(
+          setProgress({
+            key: currentDownload.key,
+            progress: "100.0",
+            seeds: 0,
+            downloadSpeed: 0,
+          }),
+        );
       } else if (currentDownload.torrentDetails.progress !== "100.0") {
         dispatch(
-          setProgress({ key: currentDownload.key, progress: status.progress }),
+          setProgress({
+            key: currentDownload.key,
+            progress: status.progress,
+            seeds: status.seeds,
+            downloadSpeed: status.downloadSpeed,
+          }),
         );
       }
     },
