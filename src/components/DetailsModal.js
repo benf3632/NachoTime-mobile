@@ -82,6 +82,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
       path: "",
       quality: selectedQuality,
       buffered: false,
+      downloadSpeed: 0,
     };
     const addDownloadFunc =
       downloadType === "cache" ? addCacheDownload : addDownload;
