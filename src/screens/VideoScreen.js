@@ -79,6 +79,7 @@ const VideoScreen = () => {
   const onVideoLoad = params => {
     console.log(params);
     setDuration(params.duration);
+    setPlayerPaused(false);
   };
 
   const onVideoProgress = params => {
@@ -180,6 +181,7 @@ const VideoScreen = () => {
           onLoad={onVideoLoad}
           onSeek={onSeek}
           onProgress={onVideoProgress}
+          volume={1.0}
           paused={playerPaused}
           style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
