@@ -116,4 +116,8 @@ export const selectCachedDownloads = state => {
   return downloadsArray.filter(value => value.downloadType === "cache");
 };
 
+export const selectDownload = key => {
+  return state => state.downloads.all_downloads[key];
+};
+
 export default downloadsSlice.reducer;

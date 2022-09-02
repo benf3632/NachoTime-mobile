@@ -5,6 +5,7 @@ import HomeNavigator from "./HomeNavigator";
 
 // screens
 import SearchScreen from "@app/screens/SearchScreen";
+import DownloadsScreen from "@app/screens/DownloadsScreen";
 import ComingSoonScreen from "@app/screens/ComingSoonScreen";
 
 // components
@@ -23,7 +24,7 @@ const MainAppTabNavigator = () => {
       <Tab.Screen name="Home" component={HomeNavigator} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Favorites" component={ComingSoonScreen} />
-      <Tab.Screen name="Downloads" component={ComingSoonScreen} />
+      <Tab.Screen name="Downloads" component={DownloadsScreen} />
       <Tab.Screen name="Settings" component={ComingSoonScreen} />
     </Tab.Navigator>
   );
