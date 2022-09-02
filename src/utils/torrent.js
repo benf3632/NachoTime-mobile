@@ -20,3 +20,15 @@ const ytsTrackers = [
 export const generateYTSMagnetURL = hash => {
   return `magnet:?xt=urn:btih:${hash}&tr=${ytsTrackers.join("&tr=")}`;
 };
+
+export const formatDownloadSpeed = speed => {
+  let speedNumber = parseInt(speed);
+  if (speedNumber >= 1000 * 1000) {
+    speedNumber = speedNumber / (1000 * 1000);
+    return `${speedNumber.toFixed(2)} MB/s`;
+  } else if (speedNumber >= 1000) {
+    speedNumber = speedNumber / 1000;
+    return `${speedNumber.toFixed(2)} KB/s`;
+  }
+  return `${speed.toFixed(2)} B/s`;
+};
