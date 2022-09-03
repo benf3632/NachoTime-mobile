@@ -91,7 +91,7 @@ const DownloadCard = ({ detailsKey }) => {
       <Swipeable
         ref={setSwipableRef}
         overshootLeft={false}
-        friction={2}
+        friction={1}
         leftThreshold={60}
         onSwipeableOpen={deleteShow}
         renderLeftActions={renderLeftAction}>
