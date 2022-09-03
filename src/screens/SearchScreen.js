@@ -8,24 +8,23 @@ import DetailsModal from "@app/components/DetailsModal";
 // components
 import SelectSlider from "@app/components/SelectSlider";
 import ShowDetailsCard from "@app/components/ShowDetailsCard";
+import LoadingCard from "@app/components/LoadingCard";
 
 // constants
 import colors from "@app/constants/colors";
 
 // helpers
 import { queryMovies } from "@app/helpers/yts";
-import LoadingCard from "@app/components/LoadingCard";
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation }) => {
   const [searchInput, onSearchInputChange] = useState("");
   const [searchShowType, setSearchShowType] = useState(0);
   const [searchResult, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [showDetailsModalVisbile, setShowDetailsModalVisbile] = useState(false);
-  const [currentDetails, setCurrentDetails] = useState(null);
 
   const search = async () => {
     setIsSearchLoading(true);
+    setSearchResults([]);
     let searchResults;
     if (!searchInput) {
       searchResults = [];
@@ -38,14 +37,8 @@ const SearchScreen = () => {
     setIsSearchLoading(false);
   };
 
-  const handleDetailsCardPressed = item => {
-    setCurrentDetails(item);
-    setShowDetailsModalVisbile(true);
-  };
-
-  const handleCloseModal = () => {
-    setCurrentDetails(null);
-    setShowDetailsModalVisbile(false);
+  const handleDetailsCardPressed = details => {
+    navigation.navigate("Details", { details });
   };
 
   useEffect(() => {
@@ -82,7 +75,11 @@ const SearchScreen = () => {
         ]}
         onValueChange={setSearchShowType}
       />
-      <View style={styles.searchResultsContainer}>
+      <View
+        style={[
+          styles.searchResultsContainer,
+          { justifyContent: isSearchLoading ? "flex-start" : "center" },
+        ]}>
         <FlatList
           data={searchResult}
           keyExtractor={item => item.imdb_code}
@@ -97,13 +94,13 @@ const SearchScreen = () => {
           )}
         />
       </View>
-      {currentDetails && (
+      {/* {currentDetails && (
         <DetailsModal
           closeModalCallback={handleCloseModal}
           modalVisible={showDetailsModalVisbile}
           details={currentDetails}
         />
-      )}
+      )} */}
     </View>
   );
 };
@@ -139,9 +136,11 @@ const styles = StyleSheet.create({
   searchResultsContainer: {
     flex: 1,
     flexDirection: "row",
+    justifyContent: "center",
   },
   showCard: {
     paddingBottom: "5%",
+    paddingRight: "3%",
   },
 });
 
