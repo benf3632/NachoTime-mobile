@@ -23,22 +23,27 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "@app/constants/colors";
 
 // selectors
-import { selectCurrentDownload, setBuffered } from "@app/slices/downloadsSlice";
+import {
+  selectCurrentDownload,
+  selectDownload,
+  setBuffered,
+} from "@app/slices/downloadsSlice";
 
 const formatSecondsToHHMMSS = seconds => {
   return new Date(seconds * 1000).toISOString().substring(11, 19);
 };
 
-const VideoScreen = () => {
+const VideoScreen = ({ route }) => {
   const navigation = useNavigation();
+  const { downloadKey } = route.params;
   const dispatch = useDispatch();
 
-  const currentDownload = useSelector(selectCurrentDownload);
+  const currentDownload = useSelector(selectDownload(downloadKey));
   const [videoSource, setVideoSource] = useState("background");
 
   const player = useRef(null);
 
-  const [playerPaused, setPlayerPaused] = useState(true);
+  const [playerPaused, setPlayerPaused] = useState(false);
   const [buffering, setBuffering] = useState(
     !currentDownload.torrentDetails.buffered,
   );
@@ -79,7 +84,7 @@ const VideoScreen = () => {
   const onVideoLoad = params => {
     console.log(params);
     setDuration(params.duration);
-    setPlayerPaused(false);
+    setPlayerPaused(true);
   };
 
   const onVideoProgress = params => {
@@ -150,11 +155,13 @@ const VideoScreen = () => {
         Orientation.lockToPortrait();
       },
     );
-    const torrentStatusListener = addListener("status", status => {
+    const torrentStatusListener = addListener("progress", progress => {
       // console.log(status);
-      if (buffering && status.buffer === "100") {
+      if (progress.data === "onStreamReady") {
         setBuffering(false);
         dispatch(setBuffered({ key: currentDownload.key, buffered: true }));
+        setPlayerPaused(true);
+        setPlayerPaused(false);
       }
     });
     Orientation.lockToLandscape();

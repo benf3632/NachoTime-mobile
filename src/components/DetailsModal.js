@@ -95,7 +95,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
       }),
     );
     if (downloadType === "cache") {
-      navigation.navigate("Video");
+      navigation.navigate("Video", { downloadKey: torrentInfo.hash });
     }
   };
 

@@ -5,6 +5,7 @@ import FastImage from "react-native-fast-image";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "react-native-circular-progress-indicator";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -27,6 +28,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 const DownloadCard = ({ detailsKey }) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const currentDownload = useSelector(selectCurrentDownload);
   const download = useSelector(selectDownload(detailsKey));
 
@@ -35,7 +37,8 @@ const DownloadCard = ({ detailsKey }) => {
   const isCurrentDownload = detailsKey === currentDownload?.key;
 
   const playShow = () => {
-    console.log("Play Show");
+    dispatch(startDownload({ key: download.key }));
+    navigation.navigate("Video", { downloadKey: download.key });
   };
 
   const toggleStartPauseDownload = () => {
