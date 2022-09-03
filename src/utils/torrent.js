@@ -22,6 +22,7 @@ export const generateYTSMagnetURL = hash => {
 };
 
 export const formatDownloadSpeed = speed => {
+  if (!speed) return "";
   let speedNumber = parseInt(speed);
   if (speedNumber >= 1000 * 1000) {
     speedNumber = speedNumber / (1000 * 1000);
@@ -30,5 +31,5 @@ export const formatDownloadSpeed = speed => {
     speedNumber = speedNumber / 1000;
     return `${speedNumber.toFixed(2)} KB/s`;
   }
-  return `${speed.toFixed(2)} B/s`;
+  return `${speedNumber.toFixed(2)} B/s`;
 };
