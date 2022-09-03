@@ -75,14 +75,14 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
     const magnet = generateYTSMagnetURL(torrentInfo.hash);
     const torrentDetails = {
       hash: torrentInfo.hash,
-      seeds: torrentInfo.seeds,
+      seeds: "0",
       size: torrentInfo.size,
       magnet: magnet,
       progress: 0,
       path: "",
       quality: selectedQuality,
       buffered: false,
-      downloadSpeed: 0,
+      downloadSpeed: "0",
     };
     const addDownloadFunc =
       downloadType === "cache" ? addCacheDownload : addDownload;
