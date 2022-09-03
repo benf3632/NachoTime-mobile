@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import RNFS from "react-native-fs";
 
 import { startTorrent, stopTorrent } from "react-native-torrent-stream";
 
@@ -113,7 +114,13 @@ export const downloadsSlice = createSlice({
         if (state.queue.includes(key)) {
           state.queue.splice(state.queue.indexOf(key), 1);
         }
-        // TODO: delete files
+        const path = state.all_downloads[key].torrentDetails.path;
+        const dirname = path.substring(0, path.lastIndexOf("/"));
+        if (RNFS.DocumentDirectoryPath === dirname) {
+          RNFS.unlink(dirname);
+        } else {
+          RNFS.unlink(path);
+        }
         delete state.all_downloads[key];
       }
     },
