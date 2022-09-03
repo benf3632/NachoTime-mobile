@@ -10,7 +10,12 @@ import colors from "@app/constants/colors";
 import MainNavigator from "@app/navigators/MainNavigator";
 
 // actions
-import { setPath, setProgress } from "@app/slices/downloadsSlice";
+import {
+  setPath,
+  setProgress,
+  startDownload,
+  startDownloadNextInQueue,
+} from "@app/slices/downloadsSlice";
 
 // selectors
 import { selectCurrentDownload } from "@app/slices/downloadsSlice";
@@ -41,17 +46,17 @@ const MainApp = () => {
 
   const statusCallback = useCallback(
     status => {
-      // console.log(status);
       if (!currentDownload) return;
-      if (status.progress.startsWith("99.9")) {
+      if (status.progress.startsWith("99.9") || status.progress === "100.0") {
         dispatch(
           setProgress({
             key: currentDownload.key,
             progress: "100.0",
-            seeds: 0,
-            downloadSpeed: 0,
+            seeds: "0",
+            downloadSpeed: "0",
           }),
         );
+        dispatch(startDownloadNextInQueue());
       } else if (currentDownload.torrentDetails.progress !== "100.0") {
         dispatch(
           setProgress({
@@ -74,6 +79,13 @@ const MainApp = () => {
       torrentStatusListener.remove();
     };
   }, [progressCallback, statusCallback]);
+
+  // init download on app start
+  useEffect(() => {
+    if (currentDownload?.downloadType === "download") {
+      dispatch(startDownload({ key: currentDownload.key }));
+    }
+  }, []);
 
   return (
     <NavigationContainer theme={navTheme}>

@@ -66,13 +66,22 @@ export const downloadsSlice = createSlice({
       state.all_downloads[key].torrentDetails.downloadSpeed =
         action.payload.downloadSpeed;
     },
-    addToQueue(state, action) {
-      const key = action.payload.key;
-      if (state.all_downloads[key]) {
-        if (!state.queue.find(value => value === key)) return;
-        state.all_downloads[key].type = "download";
-        state.queue.push(key);
+    startDownloadNextInQueue(state, action) {
+      // TODO: Add checking if user enabled downloading using mobile data
+      if (
+        state.current_download &&
+        state.all_downloads[state.current_download].downloadType === "download"
+      ) {
+        if (state.queue.includes(state.current_download)) {
+          state.queue.splice(state.queue.indexOf(state.current_download), 1);
+        }
       }
+      stopTorrent();
+      state.current_download = "";
+      if (state.queue.length === 0) return;
+      const nextInQueue = state.queue[0];
+      startTorrent(state.all_downloads[nextInQueue].torrentDetails.magnet);
+      state.current_download = nextInQueue;
     },
     startDownload(state, action) {
       const key = action.payload.key;
@@ -115,6 +124,7 @@ export const {
   addDownload,
   addCacheDownload,
   deleteDownload,
+  startDownloadNextInQueue,
   startDownload,
   stopDownload,
   setPath,
