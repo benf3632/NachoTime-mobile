@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Animated } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, Animated, Alert } from "react-native";
+import React, { useRef } from "react";
 import colors from "@app/constants/colors";
 import FastImage from "react-native-fast-image";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "react-native-circular-progress-indicator";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 
@@ -13,7 +13,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import {
   selectCurrentDownload,
   selectDownload,
+  startDownload,
+  stopDownload,
 } from "@app/slices/downloadsSlice";
+
+// actions
+import { deleteDownload } from "@app/slices/downloadsSlice";
 
 // utils
 import { formatDownloadSpeed } from "@app/utils/torrent";
@@ -21,17 +26,46 @@ import { formatDownloadSpeed } from "@app/utils/torrent";
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 const DownloadCard = ({ detailsKey }) => {
+  const dispatch = useDispatch();
   const currentDownload = useSelector(selectCurrentDownload);
   const download = useSelector(selectDownload(detailsKey));
 
-  const isCurrentDownload = detailsKey === currentDownload.key;
+  const downloadCardSwipableRef = useRef();
+
+  const isCurrentDownload = detailsKey === currentDownload?.key;
 
   const playShow = () => {
     console.log("Play Show");
   };
 
+  const toggleStartPauseDownload = () => {
+    const dispatchFunc = isCurrentDownload ? stopDownload : startDownload;
+    dispatch(dispatchFunc({ key: detailsKey }));
+  };
+
   const deleteShow = direction => {
     console.log("Delete Show");
+    if (direction === "left") {
+      downloadCardSwipableRef.current.close();
+      Alert.alert(
+        "Warning",
+        "Are you sure you want to delete the show?",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Yes",
+            onPress: () => dispatch(deleteDownload({ key: detailsKey })),
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    }
   };
 
   const renderLeftAction = (_progress, dragX) => {
@@ -48,9 +82,14 @@ const DownloadCard = ({ detailsKey }) => {
     );
   };
 
+  const setSwipableRef = ref => {
+    downloadCardSwipableRef.current = ref;
+  };
+
   return (
     <TouchableOpacity onPress={playShow}>
       <Swipeable
+        ref={setSwipableRef}
         overshootLeft={false}
         friction={2}
         leftThreshold={60}
@@ -64,12 +103,12 @@ const DownloadCard = ({ detailsKey }) => {
           />
           <View style={styles.showDetailsContainer}>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>
+              <Text numberOfLines={3} style={styles.title}>
                 {download.showDetails.title} ({download.showDetails.year})
               </Text>
             </View>
             <Text style={styles.secondaryText}>
-              {download.torrentDetails.quality}
+              {download.torrentDetails.quality} {download.torrentDetails.size}
             </Text>
             {isCurrentDownload && (
               <View>
@@ -81,22 +120,30 @@ const DownloadCard = ({ detailsKey }) => {
             )}
           </View>
           <View style={styles.actionsContainer}>
-            <TouchableOpacity>
-              <CircularProgress
-                value={parseInt(download.torrentDetails.progress)}
-                radius={20}
-                maxValue={100}
-                showProgressValue={false}
-                activeStrokeWidth={3}
-                activeStrokeColor={colors.accent}
-                title={
-                  <Ionicons
-                    name={isCurrentDownload ? "pause" : "play"}
-                    size={15}
-                  />
-                }
+            {download.torrentDetails.progress !== "100.0" ? (
+              <TouchableOpacity onPress={toggleStartPauseDownload}>
+                <CircularProgress
+                  value={parseInt(download.torrentDetails.progress)}
+                  radius={20}
+                  maxValue={100}
+                  showProgressValue={false}
+                  activeStrokeWidth={3}
+                  activeStrokeColor={colors.accent}
+                  title={
+                    <Ionicons
+                      name={isCurrentDownload ? "pause" : "play"}
+                      size={15}
+                    />
+                  }
+                />
+              </TouchableOpacity>
+            ) : (
+              <Ionicons
+                name="checkmark-circle"
+                color={colors.accent}
+                size={35}
               />
-            </TouchableOpacity>
+            )}
           </View>
         </View>
       </Swipeable>
@@ -133,10 +180,10 @@ const styles = StyleSheet.create({
   showDetailsContainer: {
     flex: 2,
     marginLeft: "1%",
+    justifyContent: "space-around",
   },
   titleContainer: {
     flexDirection: "row",
-    flex: 2,
   },
   title: {
     color: colors.primary,

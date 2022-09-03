@@ -28,7 +28,6 @@ const DownloadsScreen = () => {
           return <Text style={{ color: "white" }}>No Downloads</Text>;
         }}
         renderSectionHeader={({ section }) => {
-          console.log(section);
           return (
             <View style={styles.headingContainer}>
               <View style={styles.headingMarker} />

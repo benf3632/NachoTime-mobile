@@ -74,6 +74,18 @@ export const downloadsSlice = createSlice({
         state.queue.push(key);
       }
     },
+    startDownload(state, action) {
+      const key = action.payload.key;
+      if (state.all_downloads[key]) {
+        if (state.current_download) {
+          stopTorrent();
+        }
+        startTorrent(state.all_downloads[key].torrentDetails.magnet);
+        state.current_download = key;
+        state.all_downloads[key].torrentDetails.downloadSpeed = "0";
+        state.all_downloads[key].torrentDetails.seeds = "0";
+      }
+    },
     stopDownload(state, action) {
       const key = action.payload.key;
       if (state.all_downloads[key]) {
@@ -85,7 +97,14 @@ export const downloadsSlice = createSlice({
     deleteDownload(state, action) {
       const key = action.payload.key;
       if (state.all_downloads[key]) {
-        // TODO: stop downloading and delete files
+        if (key === state.current_download) {
+          stopTorrent();
+          state.current_download = "";
+        }
+        if (state.queue.includes(key)) {
+          state.queue.splice(state.queue.indexOf(key), 1);
+        }
+        // TODO: delete files
         delete state.all_downloads[key];
       }
     },
@@ -96,6 +115,7 @@ export const {
   addDownload,
   addCacheDownload,
   deleteDownload,
+  startDownload,
   stopDownload,
   setPath,
   setBuffered,
