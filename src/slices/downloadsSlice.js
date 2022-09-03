@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { startTorrent } from "react-native-torrent-stream";
+import { startTorrent, stopTorrent } from "react-native-torrent-stream";
 
 const initialState = {
   queue: [],
@@ -24,7 +24,7 @@ export const downloadsSlice = createSlice({
         };
         state.queue.push(key);
 
-        if (state.queue.length === 1) {
+        if (state.queue.length === 1 && !state.current_download) {
           startTorrent(state.all_downloads[key].torrentDetails.magnet);
           state.current_download = key;
         }
@@ -44,6 +44,7 @@ export const downloadsSlice = createSlice({
           downloadType: "cache",
         };
       }
+      stopTorrent();
       startTorrent(state.all_downloads[key].torrentDetails.magnet);
       state.current_download = key;
     },
@@ -77,6 +78,8 @@ export const downloadsSlice = createSlice({
       const key = action.payload.key;
       if (state.all_downloads[key]) {
         // TODO: stop downloading
+        stopTorrent();
+        state.current_download = "";
       }
     },
     deleteDownload(state, action) {
@@ -92,7 +95,6 @@ export const downloadsSlice = createSlice({
 export const {
   addDownload,
   addCacheDownload,
-  changeDownloadState,
   deleteDownload,
   stopDownload,
   setPath,
@@ -101,7 +103,6 @@ export const {
 } = downloadsSlice.actions;
 
 export const selectCurrentDownload = state => {
-  console.log("State: ", state.downloads.current_download);
   if (!state.downloads.current_download) return null;
   return state.downloads.all_downloads[state.downloads.current_download];
 };
