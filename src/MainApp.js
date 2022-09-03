@@ -31,7 +31,6 @@ const MainApp = () => {
     async event => {
       console.log("MainApp: ", event);
       if (event.data === "onStreamStarted") {
-        console.log("MainApp: ", currentDownload);
         if (!currentDownload) return;
         const path = await getVideoFile();
         dispatch(setPath({ key: currentDownload.key, path: path }));
@@ -42,7 +41,8 @@ const MainApp = () => {
 
   const statusCallback = useCallback(
     status => {
-      console.log(status);
+      // console.log(status);
+      if (!currentDownload) return;
       if (status.progress.startsWith("99.9")) {
         dispatch(
           setProgress({
