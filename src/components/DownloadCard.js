@@ -37,7 +37,9 @@ const DownloadCard = ({ detailsKey }) => {
   const isCurrentDownload = detailsKey === currentDownload?.key;
 
   const playShow = () => {
-    dispatch(startDownload({ key: download.key }));
+    if (!isCurrentDownload) {
+      dispatch(startDownload({ key: download.key }));
+    }
     navigation.navigate("Video", { downloadKey: download.key });
   };
 
