@@ -88,7 +88,6 @@ const VideoScreen = ({ route }) => {
   };
 
   const onVideoProgress = params => {
-    console.log(params);
     if (isSliding) return;
     setCurrentTime(params.currentTime);
   };
@@ -145,7 +144,6 @@ const VideoScreen = ({ route }) => {
   };
 
   const onSeek = seek => {
-    console.log(seek);
     setCurrentTime(seek.currentTime);
   };
 
@@ -158,7 +156,6 @@ const VideoScreen = ({ route }) => {
       },
     );
     const torrentStatusListener = addListener("progress", progress => {
-      // console.log(status);
       if (progress.data === "onStreamReady") {
         setBuffering(false);
         dispatch(setBuffered({ key: currentDownload.key, buffered: true }));
