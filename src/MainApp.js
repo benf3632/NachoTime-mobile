@@ -19,6 +19,7 @@ import {
 
 // selectors
 import { selectCurrentDownload } from "@app/slices/downloadsSlice";
+import Orientation from "react-native-orientation";
 
 const navTheme = {
   ...DefaultTheme,
@@ -82,6 +83,7 @@ const MainApp = () => {
 
   // init download on app start
   useEffect(() => {
+    Orientation.lockToPortrait();
     if (currentDownload?.downloadType === "download") {
       dispatch(startDownload({ key: currentDownload.key }));
     }

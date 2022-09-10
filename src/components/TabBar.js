@@ -68,7 +68,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
         return (
           <TouchableOpacity
             onLayout={event => {
-              setWidth(Math.max(width, event.nativeEvent.layout.width));
+              setWidth(event.nativeEvent.layout.width);
             }}
             style={{ flex: 1, alignItems: "center" }}
             onPress={onPress}
@@ -76,9 +76,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
             testID={options.tabBarTestID}>
             <Ionicons
               onLayout={event => {
-                setIconWidth(
-                  Math.max(iconWidth, event.nativeEvent.layout.width),
-                );
+                setIconWidth(event.nativeEvent.layout.width);
               }}
               name={iconName}
               size={30}
