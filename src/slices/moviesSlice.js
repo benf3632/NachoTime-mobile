@@ -6,21 +6,21 @@ import { fetchMoviesByFilter } from "@app/helpers/yts";
 const initialState = {
   download_count: {
     movies: [],
-    page: 0,
+    page: 1,
     loading: false,
     error: "",
     hasMore: true,
   },
   rating: {
     movies: [],
-    page: 0,
+    page: 1,
     loading: false,
     error: "",
     hasMore: true,
   },
   date_added: {
     movies: [],
-    page: 0,
+    page: 1,
     loading: false,
     error: "",
     hasMore: true,
