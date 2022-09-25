@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import colors from "@app/constants/colors";
 
 // assets
 import nacho from "@app/assets/nacho.png";
+import TVShowsList from "@app/components/TVShowsList";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -27,9 +28,11 @@ const HomeScreen = () => {
     navigation.navigate("Details", { details });
   };
 
-  const ShowsList = () => {
+  const ShowsList = useCallback(() => {
     if (selected === 0) {
       return <MoviesList onSelect={handleDetailsCardPressed} />;
+    } else if (selected === 1) {
+      return <TVShowsList onSelect={handleDetailsCardPressed} />;
     } else {
       return (
         <View
@@ -43,7 +46,7 @@ const HomeScreen = () => {
         </View>
       );
     }
-  };
+  }, [selected]);
 
   return (
     <SafeAreaView style={styles.screen}>
