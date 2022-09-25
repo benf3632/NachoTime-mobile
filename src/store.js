@@ -9,6 +9,7 @@ import Reactotron from "../ReactotronConfig";
 // slices
 import moviesSlice from "./slices/moviesSlice";
 import downloadsSlice from "./slices/downloadsSlice";
+import showsSlice from "./slices/showsSlice";
 
 // services
 import { ytsApi } from "./services/ytsApi";
@@ -22,6 +23,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   movies: moviesSlice,
   downloads: downloadsSlice,
+  shows: showsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
