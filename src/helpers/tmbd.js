@@ -1,9 +1,39 @@
 import { MovieDb } from "moviedb-promise";
 
 import { TMDB_API_KEY } from "@env";
-import { castDraft } from "immer";
 
 const moviedb = new MovieDb(TMDB_API_KEY);
+
+export async function fetchPopularTVShows(page) {
+  try {
+    const shows = await moviedb.tvPopular({ page });
+    // console.log(shows);
+
+    return shows.results.map(async TvResult => {
+      // TODO: get movie details by calling moviedb.tvInfo
+      return {
+        title: TvResult.original_name,
+        description: TvResult.overview,
+        // imdb_code:
+        rating: TvResult.vote_average,
+        large_cover_image: generateImageURL(TvResult.poster_path),
+        tmdbid: TvResult.id,
+      };
+    });
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function fetchTopRatedTVShows(page) {
+  try {
+    const shows = moviedb.tvTopRated({ page });
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 export async function fetchShowBackdropURL(imdbID) {
   try {
