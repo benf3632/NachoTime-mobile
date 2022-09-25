@@ -7,19 +7,24 @@ const moviedb = new MovieDb(TMDB_API_KEY);
 export async function fetchPopularTVShows(page) {
   try {
     const shows = await moviedb.tvPopular({ page });
-    // console.log(shows);
-
-    return shows.results.map(async TvResult => {
-      // TODO: get movie details by calling moviedb.tvInfo
-      return {
-        title: TvResult.original_name,
-        description: TvResult.overview,
-        // imdb_code:
-        rating: TvResult.vote_average,
-        large_cover_image: generateImageURL(TvResult.poster_path),
-        tmdbid: TvResult.id,
-      };
-    });
+    const shows_list = await Promise.all(
+      shows.results.map(async TvResult => {
+        const tv = await moviedb.tvInfo({
+          id: TvResult.id,
+          append_to_response: "external_ids",
+        });
+        return {
+          title: tv.name,
+          description: tv.overview,
+          imdb_code: tv.external_ids.imdb_id,
+          genres: tv.genres.map(genre => genre.name),
+          rating: tv.vote_average,
+          large_cover_image: generateImageURL(tv.poster_path),
+          tmdbid: tv.id,
+        };
+      }),
+    );
+    return shows_list;
   } catch (error) {
     console.error(error);
     return null;
