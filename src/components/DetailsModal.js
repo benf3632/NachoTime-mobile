@@ -18,7 +18,11 @@ import SelectDropdown from "react-native-select-dropdown";
 import { useNavigation } from "@react-navigation/native";
 
 // helpers
-import { fetchShowBackdropURL, fetchCast } from "@app/helpers/tmbd";
+import {
+  fetchShowBackdropURL,
+  fetchCast,
+  fetchTvCast,
+} from "@app/helpers/tmbd";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -36,7 +40,7 @@ import { addDownload, addCacheDownload } from "@app/slices/downloadsSlice";
 import { selectBestTorrent, generateYTSMagnetURL } from "@app/utils/torrent";
 
 const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
-  const { details } = route.params;
+  const { details, showType } = route.params;
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -46,12 +50,16 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   const [selectedQuality, setSelectedQuality] = useState(null);
 
   const getShowBackdropURL = async () => {
-    const backdropURL = await fetchShowBackdropURL(details.imdb_code);
+    const backdropURL =
+      details.backdrop_path || (await fetchShowBackdropURL(details.imdb_code));
     setShowBackdropURL(backdropURL);
   };
 
   const getCast = async () => {
-    const cast = await fetchCast(details.imdb_code);
+    const cast =
+      showType === "movie"
+        ? await fetchCast(details.imdb_code)
+        : await fetchTvCast(details.tmdbid);
     setShowCast(cast);
   };
 
@@ -102,7 +110,9 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   useEffect(() => {
     getShowBackdropURL();
     getCast();
-    getShowAvailableQualities();
+    if (showType === "movie") {
+      getShowAvailableQualities();
+    }
     setSelectedQuality(null);
   }, [details]);
 
@@ -128,8 +138,12 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
             <View style={styles.showDataContainer}>
               <Text style={styles.showDataText}>{details.year}</Text>
               <View style={styles.verticalSeperator} />
-              <Text style={styles.showDataText}>{details.runtime} min</Text>
-              <View style={styles.verticalSeperator} />
+              {showType === "movie" && (
+                <>
+                  <Text style={styles.showDataText}>{details.runtime} min</Text>
+                  <View style={styles.verticalSeperator} />
+                </>
+              )}
               <Text style={styles.showDataText}>
                 {details.genres?.join(", ")}
               </Text>
@@ -160,20 +174,29 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
                   }}
                 />
               </View>
-              {/* Watch Button */}
-              <TouchableOpacity
-                onPress={() => addMovieToDownload("cache")}
-                style={styles.moviePlayIcon}>
-                <MaterialCommunityIcons
-                  name="movie-play"
-                  size={25}
-                  color={colors.accent}
-                />
-              </TouchableOpacity>
-              {/* Download Button */}
-              <TouchableOpacity onPress={() => addMovieToDownload("download")}>
-                <AntDesign name="download" size={25} color={colors.accent} />
-              </TouchableOpacity>
+              {showType === "movie" && (
+                <>
+                  {/* Watch Button */}
+                  <TouchableOpacity
+                    onPress={() => addMovieToDownload("cache")}
+                    style={styles.moviePlayIcon}>
+                    <MaterialCommunityIcons
+                      name="movie-play"
+                      size={25}
+                      color={colors.accent}
+                    />
+                  </TouchableOpacity>
+                  {/* Download Button */}
+                  <TouchableOpacity
+                    onPress={() => addMovieToDownload("download")}>
+                    <AntDesign
+                      name="download"
+                      size={25}
+                      color={colors.accent}
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
           <ReadMore
