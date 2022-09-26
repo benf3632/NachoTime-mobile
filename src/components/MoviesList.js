@@ -149,7 +149,7 @@ const MoviesList = ({ onSelect }) => {
           renderItem={({ item }) => (
             <ShowDetailsCard
               style={{ marginRight: 10 }}
-              onPress={() => onSelect(item)}
+              onPress={() => onSelect(item, "movie")}
               details={item}
             />
           )}

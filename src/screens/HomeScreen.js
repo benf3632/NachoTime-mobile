@@ -24,8 +24,8 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [selected, setSelected] = useState(0);
 
-  const handleDetailsCardPressed = details => {
-    navigation.navigate("Details", { details });
+  const handleDetailsCardPressed = (details, showType) => {
+    navigation.navigate("Details", { details, showType });
   };
 
   const ShowsList = useCallback(() => {

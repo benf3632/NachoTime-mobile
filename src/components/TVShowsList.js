@@ -53,7 +53,7 @@ const TVShowsList = ({ onSelect }) => {
     <>
       <View style={styles.headingContainer}>
         <View style={styles.headingMarker} />
-        <Text style={styles.heading}>Popular Movies</Text>
+        <Text style={styles.heading}>Popular TV Shows</Text>
       </View>
       {popluarTVShows.error ? (
         <View style={styles.errorContainer}>
@@ -76,7 +76,7 @@ const TVShowsList = ({ onSelect }) => {
           renderItem={({ item }) => (
             <ShowDetailsCard
               style={{ marginRight: 10 }}
-              onPress={() => onSelect(item)}
+              onPress={() => onSelect(item, "tv")}
               details={item}
             />
           )}
