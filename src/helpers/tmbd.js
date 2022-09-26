@@ -15,11 +15,13 @@ export async function fetchPopularTVShows(page) {
         });
         return {
           title: tv.name,
-          description: tv.overview,
+          summary: tv.overview,
           imdb_code: tv.external_ids.imdb_id,
           genres: tv.genres.map(genre => genre.name),
           rating: tv.vote_average,
           large_cover_image: generateImageURL(tv.poster_path),
+          backdrop_path: generateImageURL(tv.backdrop_path),
+          year: tv.first_air_date.split("-")[0],
           tmdbid: tv.id,
         };
       }),
@@ -80,6 +82,23 @@ export async function fetchCast(imdbID) {
     const tmbdID = await getMovieTMBDID(imdbID);
     const movieCredits = await moviedb.movieCredits({ id: tmbdID });
     let cast = movieCredits?.cast;
+    cast = cast?.slice(0, 10);
+    cast = cast?.map(cast => ({
+      id: cast.id,
+      name: cast.name,
+      image: generateImageURL(cast.profile_path),
+    }));
+    return cast;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function fetchTvCast(tmbdID) {
+  try {
+    const tvCredits = await moviedb.tvCredits({ id: tmbdID });
+    let cast = tvCredits?.cast;
     cast = cast?.slice(0, 10);
     cast = cast?.map(cast => ({
       id: cast.id,
