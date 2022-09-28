@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Modal,
   StyleSheet,
   View,
   ScrollView,
@@ -64,11 +63,15 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   };
 
   const getShowAvailableQualities = () => {
-    const showQualities = new Set();
-    details.torrents.forEach(torrent => {
-      showQualities.add(torrent.quality);
-    });
-    setAvailableQualities(Array.from(showQualities));
+    if (showType === "movie") {
+      const showQualities = new Set();
+      details.torrents.forEach(torrent => {
+        showQualities.add(torrent.quality);
+      });
+      setAvailableQualities(Array.from(showQualities));
+    } else if (showType == "tv") {
+      setAvailableQualities(["720p", "1080p"]);
+    }
   };
 
   const addMovieToDownload = downloadType => {
@@ -110,9 +113,9 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   useEffect(() => {
     getShowBackdropURL();
     getCast();
-    if (showType === "movie") {
-      getShowAvailableQualities();
-    }
+    // if (showType === "movie") {
+    getShowAvailableQualities();
+    // }
     setSelectedQuality(null);
   }, [details]);
 

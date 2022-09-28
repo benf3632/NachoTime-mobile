@@ -6,7 +6,7 @@ import VideoScreen from "@app/screens/VideoScreen";
 
 // navigators
 import MainAppTabNavigator from "@app/navigators/MainAppTabNavigator";
-import DetailsModal from "@app/components/DetailsModal";
+import ShowDetailsModal from "@app/components/ShowDetailsModal";
 
 const Main = createStackNavigator();
 
@@ -21,7 +21,7 @@ function MainNavigator() {
         <Main.Screen name="Video" component={VideoScreen} />
       </Main.Group>
       <Main.Group screenOptions={{ presentation: "modal" }}>
-        <Main.Screen name="Details" component={DetailsModal} />
+        <Main.Screen name="Details" component={ShowDetailsModal} />
       </Main.Group>
     </Main.Navigator>
   );

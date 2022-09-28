@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, FlatList } from "react-native";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
-import DetailsModal from "@app/components/DetailsModal";
+import DetailsModal from "@app/components/ShowDetailsModal";
 
 // components
 import SelectSlider from "@app/components/SelectSlider";
