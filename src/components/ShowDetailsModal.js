@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  SectionList,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
@@ -16,12 +17,10 @@ import { useDispatch } from "react-redux";
 import SelectDropdown from "react-native-select-dropdown";
 import { useNavigation } from "@react-navigation/native";
 
-// componenets
-import EpisodesList from "./EpisodesList";
-
 // helpers
 import {
   fetchShowBackdropURL,
+  fetchTvShowEpisodes,
   fetchCast,
   fetchTvCast,
 } from "@app/helpers/tmbd";
@@ -50,6 +49,8 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   const [showCast, setShowCast] = useState(null);
   const [availableQualities, setAvailableQualities] = useState([]);
   const [selectedQuality, setSelectedQuality] = useState(null);
+  const [episodes, setEpisodes] = useState([]);
+  const [selectedSeason, setSelectedSeason] = useState(0);
 
   const getShowBackdropURL = async () => {
     const backdropURL =
@@ -113,128 +114,199 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
     }
   };
 
+  const getEpisodes = async () => {
+    const tvEpisodes = await fetchTvShowEpisodes(
+      details.tmdbid,
+      details.seasons,
+    );
+    setEpisodes(tvEpisodes);
+  };
+
   useEffect(() => {
     getShowBackdropURL();
     getCast();
-    // if (showType === "movie") {
     getShowAvailableQualities();
-    // }
-    setSelectedQuality(null);
+    if (showType === "tv") {
+      getEpisodes();
+    }
+    // setSelectedQuality(null);
   }, [details]);
 
   return (
     <View style={styles.modalContainer}>
-      <ScrollView style={styles.showModalScrollView}>
-        {/* Modal Header */}
-        <ImageBackground
-          source={{
-            uri: showBackdropURL,
-          }}
-          style={styles.showImageBackground}
-          resizeMode="cover">
-          {/* Favorite Icon */}
-          <LinearGradient
-            colors={["#00000000", colors.background]}
-            style={styles.showDetailsHeader}>
-            <Text style={styles.showTitle}>{details.title}</Text>
-            <View style={styles.showRatingContainer}>
-              <Ionicons name="star" color="yellow" size={18} />
-              <Text style={styles.showRatingText}>{details.rating}</Text>
-            </View>
-            <View style={styles.showDataContainer}>
-              <Text style={styles.showDataText}>{details.year}</Text>
-              <View style={styles.verticalSeperator} />
-              {showType === "movie" && (
-                <>
-                  <Text style={styles.showDataText}>{details.runtime} min</Text>
-                  <View style={styles.verticalSeperator} />
-                </>
-              )}
-              <Text style={styles.showDataText}>
-                {details.genres?.join(", ")}
+      <FlatList
+        data={episodes.length !== 0 ? episodes[selectedSeason].episodes : []}
+        style={styles.showModalScrollView}
+        renderItem={({ item }) => {
+          console.log(item);
+          return (
+            <View
+              style={{
+                width: "100%",
+                paddingHorizontal: "5%",
+                marginVertical: 5,
+              }}>
+              <View style={{ flexDirection: "row" }}>
+                <Image
+                  source={{ uri: item.still_path }}
+                  style={{ width: 125, height: 70 }}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    flexShrink: 1,
+                    marginLeft: 5,
+                  }}>
+                  <Text style={{ color: colors.primary, flexShrink: 1 }}>
+                    {item.episode_number}. {item.name}
+                  </Text>
+                </View>
+              </View>
+              <Text
+                style={{
+                  color: colors.primary,
+                }}>
+                {item.summary}
               </Text>
             </View>
-          </LinearGradient>
-        </ImageBackground>
-        {/* Modal Body */}
-        <View style={styles.modalBody}>
-          <View style={styles.summaryHeadingContainer}>
-            {/* Show Summary */}
-            <Text style={styles.headingText}>Story Line</Text>
-            {/* Show Actions */}
-            <View style={styles.actionsContainer}>
-              {/* Quality Chooser */}
-              <View style={styles.qualityDropdownContainer}>
+          );
+        }}
+        ListHeaderComponent={
+          <View style={{ width: "100%" }}>
+            {/* Modal Header */}
+            <ImageBackground
+              source={{
+                uri: showBackdropURL,
+              }}
+              style={styles.showImageBackground}
+              resizeMode="cover">
+              {/* Favorite Icon */}
+              <LinearGradient
+                colors={["#00000000", colors.background]}
+                style={styles.showDetailsHeader}>
+                <Text style={styles.showTitle}>{details.title}</Text>
+                <View style={styles.showRatingContainer}>
+                  <Ionicons name="star" color="yellow" size={18} />
+                  <Text style={styles.showRatingText}>{details.rating}</Text>
+                </View>
+                <View style={styles.showDataContainer}>
+                  <Text style={styles.showDataText}>{details.year}</Text>
+                  <View style={styles.verticalSeperator} />
+                  {showType === "movie" && (
+                    <>
+                      <Text style={styles.showDataText}>
+                        {details.runtime} min
+                      </Text>
+                      <View style={styles.verticalSeperator} />
+                    </>
+                  )}
+                  <Text style={styles.showDataText}>
+                    {details.genres?.join(", ")}
+                  </Text>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+            {/* Modal Body */}
+            <View style={styles.modalBody}>
+              <View style={styles.summaryHeadingContainer}>
+                {/* Show Summary */}
+                <Text style={styles.headingText}>Story Line</Text>
+                {/* Show Actions */}
+                <View style={styles.actionsContainer}>
+                  {/* Quality Chooser */}
+                  <View style={styles.qualityDropdownContainer}>
+                    <SelectDropdown
+                      buttonStyle={styles.qualityDropdown}
+                      buttonTextStyle={styles.qualityOptionText}
+                      rowStyle={styles.qualityDropdownRow}
+                      rowTextStyle={styles.qualityDropdownRowText}
+                      defaultButtonText="Quality"
+                      va
+                      renderDropdownIcon={() => (
+                        <FontAwesome
+                          name="chevron-down"
+                          size={12}
+                          color="white"
+                        />
+                      )}
+                      data={availableQualities}
+                      onSelect={selectedItem => {
+                        setSelectedQuality(selectedItem);
+                      }}
+                    />
+                  </View>
+                  {showType === "movie" && (
+                    <>
+                      {/* Watch Button */}
+                      <TouchableOpacity
+                        onPress={() => addMovieToDownload("cache")}
+                        style={styles.moviePlayIcon}>
+                        <MaterialCommunityIcons
+                          name="movie-play"
+                          size={25}
+                          color={colors.accent}
+                        />
+                      </TouchableOpacity>
+                      {/* Download Button */}
+                      <TouchableOpacity
+                        onPress={() => addMovieToDownload("download")}>
+                        <AntDesign
+                          name="download"
+                          size={25}
+                          color={colors.accent}
+                        />
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </View>
+              </View>
+              <ReadMore
+                numberOfLines={4}
+                seeMoreText="Read More"
+                seeMoreStyle={styles.readMoreText}
+                expandOnly
+                style={styles.text}>
+                {details.summary}
+              </ReadMore>
+              {/* Show Cast */}
+              <Text style={styles.headingText}>The Cast</Text>
+              {/* Cast */}
+              <FlatList
+                style={styles.castList}
+                horizontal
+                data={showCast}
+                renderItem={({ item }) => (
+                  <View style={styles.castContainer}>
+                    <Image
+                      resizeMode="cover"
+                      style={styles.castImage}
+                      source={{ uri: item.image }}
+                    />
+                    <Text style={styles.castName}>{item.name}</Text>
+                  </View>
+                )}
+              />
+              {showType === "tv" && episodes.length !== 0 && (
                 <SelectDropdown
-                  buttonStyle={styles.qualityDropdown}
-                  buttonTextStyle={styles.qualityOptionText}
-                  rowStyle={styles.qualityDropdownRow}
-                  rowTextStyle={styles.qualityDropdownRowText}
-                  defaultButtonText="Quality"
+                  buttonStyle={styles.seasonDropdown}
+                  buttonTextStyle={styles.seasonOptionText}
+                  rowStyle={styles.seasonDropdownRow}
+                  rowTextStyle={styles.seasonDropdownRowText}
+                  defaultValueByIndex={0}
                   renderDropdownIcon={() => (
                     <FontAwesome name="chevron-down" size={12} color="white" />
                   )}
-                  data={availableQualities}
-                  onSelect={selectedItem => {
-                    setSelectedQuality(selectedItem);
+                  data={episodes.map(season => season.name)}
+                  onSelect={(_, index) => {
+                    setSelectedSeason(index);
                   }}
                 />
-              </View>
-              {showType === "movie" && (
-                <>
-                  {/* Watch Button */}
-                  <TouchableOpacity
-                    onPress={() => addMovieToDownload("cache")}
-                    style={styles.moviePlayIcon}>
-                    <MaterialCommunityIcons
-                      name="movie-play"
-                      size={25}
-                      color={colors.accent}
-                    />
-                  </TouchableOpacity>
-                  {/* Download Button */}
-                  <TouchableOpacity
-                    onPress={() => addMovieToDownload("download")}>
-                    <AntDesign
-                      name="download"
-                      size={25}
-                      color={colors.accent}
-                    />
-                  </TouchableOpacity>
-                </>
               )}
             </View>
           </View>
-          <ReadMore
-            numberOfLines={4}
-            seeMoreText="Read More"
-            seeMoreStyle={styles.readMoreText}
-            expandOnly
-            style={styles.text}>
-            {details.summary}
-          </ReadMore>
-          {/* Show Cast */}
-          <Text style={styles.headingText}>The Cast</Text>
-          {/* Cast */}
-          <FlatList
-            style={styles.castList}
-            horizontal
-            data={showCast}
-            renderItem={({ item }) => (
-              <View style={styles.castContainer}>
-                <Image
-                  resizeMode="cover"
-                  style={styles.castImage}
-                  source={{ uri: item.image }}
-                />
-                <Text style={styles.castName}>{item.name}</Text>
-              </View>
-            )}
-          />
-        </View>
-        {/* Seasons and episodes */}
-        <EpisodesList show={details} />
-      </ScrollView>
+        }
+      />
       <TouchableOpacity
         style={styles.closeButton}
         onPress={() => navigation.goBack()}>
@@ -322,9 +394,10 @@ const styles = StyleSheet.create({
   },
   qualityDropdown: {
     width: 100,
-    height: 20,
+    height: 30,
     marginVertical: 10,
     backgroundColor: colors.background_accent,
+    borderRadius: 2,
   },
   qualityOptionText: {
     fontSize: 14,
@@ -334,6 +407,26 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background_accent,
   },
   qualityDropdownRowText: {
+    color: colors.primary,
+  },
+  qualityDropdownContainer: {
+    paddingRight: 10,
+  },
+  seasonDropdown: {
+    width: 110,
+    height: 30,
+    marginVertical: 10,
+    backgroundColor: colors.background_accent,
+    borderRadius: 2,
+  },
+  seasonOptionText: {
+    fontSize: 14,
+    color: colors.primary,
+  },
+  seasonDropdownRow: {
+    backgroundColor: colors.background_accent,
+  },
+  seasonDropdownRowText: {
     color: colors.primary,
   },
   moviePlayIcon: {
