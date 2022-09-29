@@ -36,6 +36,7 @@ export async function fetchPopularTVShows(page) {
 
 export async function fetchTvShowEpisodes(tmbdId, tvSeasons) {
   try {
+    console.log(tmbdId);
     let episodes = [];
     // console.log(tmbdId);
     await Promise.all(
@@ -54,7 +55,11 @@ export async function fetchTvShowEpisodes(tmbdId, tvSeasons) {
             episode_number: episode.episode_number,
             name: episode.name,
             summary: episode.overview,
-            still_path: episode.still_path,
+            runtime: episode.runtime,
+            air_date: episode.air_date,
+            still_path: episode.still_path
+              ? generateImageURL(episode.still_path)
+              : null,
           })),
         });
       }),
