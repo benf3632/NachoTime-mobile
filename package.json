@@ -35,6 +35,7 @@
     "react-native-screens": "^3.10.2",
     "react-native-select-dropdown": "^2.0.4",
     "react-native-svg": "^13.1.0",
+    "react-native-tabs-section-list": "^1.0.1",
     "react-native-torrent-stream": "git@github.com:benf3632/react-native-torrent-stream.git",
     "react-native-vector-icons": "^9.2.0",
     "react-native-video": "6.0.0-alpha.1",

@@ -7667,6 +7667,7 @@ __metadata:
     react-native-screens: ^3.10.2
     react-native-select-dropdown: ^2.0.4
     react-native-svg: ^13.1.0
+    react-native-tabs-section-list: ^1.0.1
     react-native-torrent-stream: "git@github.com:benf3632/react-native-torrent-stream.git"
     react-native-vector-icons: ^9.2.0
     react-native-video: 6.0.0-alpha.1
@@ -8773,6 +8774,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 0979b702887d7a20fb6c7bc7cc7afad54f324603c9fdc212a9029a9bcf621e887afa5e780a0442d5abd85396f9615988143b99f50929503b2ad26d82360aefa2
+  languageName: node
+  linkType: hard
+
+"react-native-tabs-section-list@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "react-native-tabs-section-list@npm:1.0.1"
+  peerDependencies:
+    react: "> 15.0.0"
+    react-native: "> 0.50.0"
+  checksum: b88a0a2f38f9d2648801a864570aefba837dc6dec1adea09b9fc97dc9e91bd9c9ccd2f78ae28d5902a9de87c879f89eb040f07b6d0980cde2fd91cff926fd940
   languageName: node
   linkType: hard
 

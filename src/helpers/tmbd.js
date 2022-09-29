@@ -22,11 +22,44 @@ export async function fetchPopularTVShows(page) {
           large_cover_image: generateImageURL(tv.poster_path),
           backdrop_path: generateImageURL(tv.backdrop_path),
           year: tv.first_air_date.split("-")[0],
+          seasons: tv.seasons,
           tmdbid: tv.id,
         };
       }),
     );
     return shows_list;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function fetchTvShowEpisodes(tmbdId, tvSeasons) {
+  try {
+    let episodes = [];
+    // console.log(tmbdId);
+    await Promise.all(
+      tvSeasons.map(async season => {
+        // console.log(season);
+        const tvSeason = await moviedb.seasonInfo({
+          id: tmbdId,
+          season_number: season.season_number,
+        });
+        // console.log("MEOW");
+        // console.log(tvSeason);
+        episodes.push({
+          season_number: tvSeason.season_number,
+          name: tvSeason.name,
+          episodes: tvSeason.episodes.map(episode => ({
+            episode_number: episode.episode_number,
+            name: episode.name,
+            summary: episode.overview,
+            still_path: episode.still_path,
+          })),
+        });
+      }),
+    );
+    return episodes;
   } catch (error) {
     console.error(error);
     return null;

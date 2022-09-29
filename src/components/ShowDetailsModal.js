@@ -16,6 +16,9 @@ import { useDispatch } from "react-redux";
 import SelectDropdown from "react-native-select-dropdown";
 import { useNavigation } from "@react-navigation/native";
 
+// componenets
+import EpisodesList from "./EpisodesList";
+
 // helpers
 import {
   fetchShowBackdropURL,
@@ -229,6 +232,8 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
             )}
           />
         </View>
+        {/* Seasons and episodes */}
+        <EpisodesList show={details} />
       </ScrollView>
       <TouchableOpacity
         style={styles.closeButton}
