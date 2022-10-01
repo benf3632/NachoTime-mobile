@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -39,6 +39,7 @@ import { addDownload, addCacheDownload } from "@app/slices/downloadsSlice";
 
 // utils
 import { selectBestTorrent, generateYTSMagnetURL } from "@app/utils/torrent";
+import { findEpisodeTorrent } from "@app/helpers/eztv";
 
 const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   const { details, showType } = route.params;
@@ -74,7 +75,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
       });
       setAvailableQualities(Array.from(showQualities));
     } else if (showType == "tv") {
-      setAvailableQualities(["720p", "1080p"]);
+      setAvailableQualities(["720p", "1080p", "2160p"]);
     }
   };
 
@@ -114,6 +115,18 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
     }
   };
 
+  const addEpisodeToDownload = useCallback(
+    async (episode, downloadType) => {
+      const torrent = await findEpisodeTorrent(
+        episodes[selectedSeason].season_number.toString(),
+        episode.toString(),
+        details.imdb_code,
+        selectedQuality,
+      );
+    },
+    [selectedSeason, selectedQuality, episodes],
+  );
+
   const getEpisodes = async () => {
     const tvEpisodes = await fetchTvShowEpisodes(
       details.tmdbid,
@@ -138,7 +151,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
         data={episodes.length !== 0 ? episodes[selectedSeason].episodes : []}
         style={styles.showModalScrollView}
         renderItem={({ item }) => {
-          console.log(item);
+          // console.log(item);
           return (
             <View
               style={{
@@ -147,10 +160,29 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
                 marginVertical: 5,
               }}>
               <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={{ uri: item.still_path }}
-                  style={{ width: 125, height: 70 }}
-                />
+                <TouchableOpacity
+                  onPress={() =>
+                    addEpisodeToDownload(item.episode_number, "cache")
+                  }>
+                  <ImageBackground
+                    source={{ uri: item.still_path }}
+                    style={{ width: 125, height: 70 }}>
+                    <View
+                      style={{
+                        backgroundColor: "#0000002f",
+                        height: "100%",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}>
+                      <Ionicons
+                        name="play-circle-outline"
+                        size={40}
+                        color="black"
+                      />
+                    </View>
+                  </ImageBackground>
+                </TouchableOpacity>
                 <View
                   style={{
                     flexDirection: "row",
