@@ -115,14 +115,14 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
     }
   };
 
-  const addEpisodeToDownload = useCallback(
+  const getEpisodeTorrents = useCallback(
     async (episode, downloadType) => {
-      const torrent = await findEpisodeTorrent(
+      const result = await findEpisodeTorrent(
+        details.title,
         episodes[selectedSeason].season_number.toString(),
         episode.toString(),
-        details.imdb_code,
-        selectedQuality,
       );
+      console.log(result);
     },
     [selectedSeason, selectedQuality, episodes],
   );
@@ -162,7 +162,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   onPress={() =>
-                    addEpisodeToDownload(item.episode_number, "cache")
+                    getEpisodeTorrents(item.episode_number, "cache")
                   }>
                   <ImageBackground
                     source={{ uri: item.still_path }}
