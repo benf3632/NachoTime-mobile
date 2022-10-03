@@ -117,15 +117,30 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
 
   const getEpisodeTorrents = useCallback(
     async (episode, downloadType) => {
-      const result = await findEpisodeTorrent(
+      const torrents = await findEpisodeTorrent(
         details.title,
         episodes[selectedSeason].season_number.toString(),
         episode.toString(),
       );
-      console.log(result);
+      let bestTorrent = torrents.find(torrent =>
+        torrent.title.includes(selectedQuality),
+      );
+      if (bestTorrent === undefined) {
+        // TODO: Display to user different quality options and selectd best torrent again
+      }
+      torrents.forEach(torrent => {
+        if (
+          torrent.title.includes(selectedQuality) &&
+          torrent.seeds > bestTorrent.seeds
+        ) {
+          bestTorrent = torrent;
+        }
+      });
     },
     [selectedSeason, selectedQuality, episodes],
   );
+
+  const addEpisodeToDownload = () => {};
 
   const getEpisodes = async () => {
     const tvEpisodes = await fetchTvShowEpisodes(
