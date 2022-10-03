@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -16,6 +16,7 @@ import { addListener } from "react-native-torrent-stream";
 import { useDispatch } from "react-redux";
 import SelectDropdown from "react-native-select-dropdown";
 import { useNavigation } from "@react-navigation/native";
+import { FloatingAction } from "react-native-floating-action";
 
 // helpers
 import {
@@ -52,6 +53,9 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   const [selectedQuality, setSelectedQuality] = useState(null);
   const [episodes, setEpisodes] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState(0);
+  const [isScrollToTopButtonVisible, setIsScrollToTopButtonVisible] =
+    useState(false);
+  const listRef = useRef(null);
 
   const getShowBackdropURL = async () => {
     const backdropURL =
@@ -115,7 +119,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
     }
   };
 
-  const getEpisodeTorrents = useCallback(
+  const getEpisodeTorrent = useCallback(
     async (episode, downloadType) => {
       const torrents = await findEpisodeTorrent(
         details.title,
@@ -127,6 +131,8 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
       );
       if (bestTorrent === undefined) {
         // TODO: Display to user different quality options and selectd best torrent again
+        console.log("Couldn't find torrent suited for the selected quality");
+        return;
       }
       torrents.forEach(torrent => {
         if (
@@ -136,6 +142,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
           bestTorrent = torrent;
         }
       });
+      console.log(bestTorrent);
     },
     [selectedSeason, selectedQuality, episodes],
   );
@@ -163,6 +170,14 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   return (
     <View style={styles.modalContainer}>
       <FlatList
+        onScroll={event => {
+          if (event.nativeEvent.contentOffset.y > 300) {
+            setIsScrollToTopButtonVisible(true);
+          } else {
+            setIsScrollToTopButtonVisible(false);
+          }
+        }}
+        ref={ref => (listRef.current = ref)}
         data={episodes.length !== 0 ? episodes[selectedSeason].episodes : []}
         style={styles.showModalScrollView}
         renderItem={({ item }) => {
@@ -177,7 +192,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   onPress={() =>
-                    getEpisodeTorrents(item.episode_number, "cache")
+                    getEpisodeTorrent(item.episode_number, "cache")
                   }>
                   <ImageBackground
                     source={{ uri: item.still_path }}
@@ -361,6 +376,22 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
         <FontAwesome name="chevron-down" size={20} color="white" />
         {/* </LinearGradient> */}
       </TouchableOpacity>
+      <FloatingAction
+        actions={[
+          {
+            position: 1,
+            text: "top",
+            name: "top",
+            icon: <Ionicons name="arrow-up" color="white" size={30} />,
+          },
+        ]}
+        overrideWithAction
+        color={colors.accent}
+        visible={isScrollToTopButtonVisible}
+        onPressItem={() => {
+          listRef.current.scrollToOffset({ offset: 0, animated: true });
+        }}
+      />
     </View>
   );
 };
