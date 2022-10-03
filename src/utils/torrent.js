@@ -21,6 +21,12 @@ export const generateYTSMagnetURL = hash => {
   return `magnet:?xt=urn:btih:${hash}&tr=${ytsTrackers.join("&tr=")}`;
 };
 
+export const getInfoHashFromMagnet = magnet => {
+  const regex = RegExp("(.{32})(?=&)", "g");
+  const infoHash = magnet.match(regex)[0];
+  return infoHash;
+};
+
 export const formatDownloadSpeed = speed => {
   if (!speed) return "";
   let speedNumber = parseInt(speed);

@@ -11,11 +11,11 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
-import { addListener } from "react-native-torrent-stream";
 import { useDispatch } from "react-redux";
 import SelectDropdown from "react-native-select-dropdown";
 import { useNavigation } from "@react-navigation/native";
 import { FloatingAction } from "react-native-floating-action";
+import { format } from "bytes";
 
 // helpers
 import {
@@ -24,6 +24,7 @@ import {
   fetchCast,
   fetchTvCast,
 } from "@app/helpers/tmbd";
+import { findEpisodeTorrent } from "@app/helpers/eztv";
 
 // icons
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -38,10 +39,13 @@ import colors from "@app/constants/colors";
 import { addDownload, addCacheDownload } from "@app/slices/downloadsSlice";
 
 // utils
-import { selectBestTorrent, generateYTSMagnetURL } from "@app/utils/torrent";
-import { findEpisodeTorrent } from "@app/helpers/eztv";
+import {
+  selectBestTorrent,
+  generateYTSMagnetURL,
+  getInfoHashFromMagnet,
+} from "@app/utils/torrent";
 
-const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
+const DetailsModal = ({ route }) => {
   const { details, showType } = route.params;
 
   const dispatch = useDispatch();
@@ -126,7 +130,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
       const torrents = await findEpisodeTorrent(
         details.title,
         episodes[selectedSeason].season_number.toString(),
-        episode.toString(),
+        episode.episode_number.toString(),
       );
       let bestTorrent = torrents.find(torrent =>
         torrent.title.includes(selectedQuality),
@@ -149,11 +153,49 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
         }
       });
       console.log(bestTorrent);
+      addEpisodeToDownload(episode, bestTorrent, downloadType);
     },
     [selectedSeason, selectedQuality, episodes],
   );
 
-  const addEpisodeToDownload = () => {};
+  const addEpisodeToDownload = (episode, torrent, downloadType) => {
+    console.log(details);
+    const showDetails = {
+      tmdbid: details.imdbid,
+      imdb_code: details.imdb_code,
+      season: episodes[selectedSeason].season_number,
+      episode: episode,
+      show_title: details.title,
+      title: episode.name,
+      cover_image: details.large_cover_image,
+      episode_backdrop: episode.still_path,
+    };
+    const magnet = torrent.magnet;
+    const torrentDetails = {
+      hash: getInfoHashFromMagnet(magnet),
+      seeds: "0",
+      size: format(torrent.size),
+      magnet: magnet,
+      progress: 0,
+      path: "",
+      quality: selectedQuality,
+      buffered: false,
+      downloadSpeed: 0,
+    };
+    const addDownloadFunc =
+      downloadType === "cache" ? addCacheDownload : addDownload;
+    dispatch(
+      addDownloadFunc({
+        key: torrentDetails.hash,
+        showType: "tv",
+        torrentDetails: torrentDetails,
+        showDetails: showDetails,
+      }),
+    );
+    if (downloadType === "cache") {
+      navigation.navigate("Video", { downloadKey: torrentDetails.hash });
+    }
+  };
 
   const getEpisodes = async () => {
     const tvEpisodes = await fetchTvShowEpisodes(
@@ -197,9 +239,7 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
               }}>
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
-                  onPress={() =>
-                    getEpisodeTorrent(item.episode_number, "cache")
-                  }>
+                  onPress={() => getEpisodeTorrent(item, "cache")}>
                   <ImageBackground
                     source={{ uri: item.still_path }}
                     style={{ width: 125, height: 70 }}>
