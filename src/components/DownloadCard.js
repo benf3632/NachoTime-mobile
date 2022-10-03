@@ -109,7 +109,15 @@ const DownloadCard = ({ detailsKey }) => {
           <View style={styles.showDetailsContainer}>
             <View style={styles.titleContainer}>
               <Text numberOfLines={3} style={styles.title}>
-                {download.showDetails.title} ({download.showDetails.year})
+                {download.showDetails.title} (
+                {download.showType === "movie"
+                  ? download.showDetails.year
+                  : `S${download.showDetails.season
+                      .toString()
+                      .padStart(2, "0")}E${download.showDetails.episode
+                      .toString()
+                      .padStart(2, "0")}`}
+                )
               </Text>
             </View>
             <Text style={styles.secondaryText}>
