@@ -2,13 +2,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   View,
-  ScrollView,
   ImageBackground,
   Text,
   TouchableOpacity,
   FlatList,
   Image,
-  SectionList,
+  ToastAndroid,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
@@ -84,7 +83,10 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
   };
 
   const addMovieToDownload = downloadType => {
-    // TODO: check if the user selected a quality
+    if (!selectedQuality) {
+      ToastAndroid.show("Please choose a quality first!", ToastAndroid.SHORT);
+      return;
+    }
     const torrentInfo = selectBestTorrent(details.torrents, selectedQuality);
     const movieDetails = {
       imdb_code: details.imdb_code,
@@ -131,6 +133,10 @@ const DetailsModal = ({ route, modalVisible, closeModalCallback }) => {
       );
       if (bestTorrent === undefined) {
         // TODO: Display to user different quality options and selectd best torrent again
+        ToastAndroid.show(
+          "Please select a different quality",
+          ToastAndroid.SHORT,
+        );
         console.log("Couldn't find torrent suited for the selected quality");
         return;
       }
