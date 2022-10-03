@@ -164,7 +164,7 @@ const DetailsModal = ({ route }) => {
       tmdbid: details.imdbid,
       imdb_code: details.imdb_code,
       season: episodes[selectedSeason].season_number,
-      episode: episode,
+      episode: episode.episode_number,
       show_title: details.title,
       title: episode.name,
       cover_image: details.large_cover_image,
