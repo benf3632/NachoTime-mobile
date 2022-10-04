@@ -4,28 +4,43 @@ import { TMDB_API_KEY } from "@env";
 
 const moviedb = new MovieDb(TMDB_API_KEY);
 
+export async function queryShows(query, page = 1) {
+  try {
+    const shows = await moviedb.searchTv({ query: query, page: page });
+    const shows_list = await Promise.all(
+      shows.results.map(async result => transformToShow(result.id)),
+    );
+    return shows_list;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+async function transformToShow(tmdbid) {
+  const tv = await moviedb.tvInfo({
+    id: tmdbid,
+    append_to_response: "external_ids",
+  });
+  return {
+    title: tv.name,
+    summary: tv.overview,
+    imdb_code: tv.external_ids.imdb_id,
+    genres: tv.genres.map(genre => genre.name),
+    rating: tv.vote_average,
+    large_cover_image: generateImageURL(tv.poster_path),
+    backdrop_path: generateImageURL(tv.backdrop_path),
+    year: tv.first_air_date.split("-")[0],
+    seasons: tv.seasons,
+    tmdbid: tv.id,
+  };
+}
+
 export async function fetchPopularTVShows(page) {
   try {
     const shows = await moviedb.tvPopular({ page });
     const shows_list = await Promise.all(
-      shows.results.map(async TvResult => {
-        const tv = await moviedb.tvInfo({
-          id: TvResult.id,
-          append_to_response: "external_ids",
-        });
-        return {
-          title: tv.name,
-          summary: tv.overview,
-          imdb_code: tv.external_ids.imdb_id,
-          genres: tv.genres.map(genre => genre.name),
-          rating: tv.vote_average,
-          large_cover_image: generateImageURL(tv.poster_path),
-          backdrop_path: generateImageURL(tv.backdrop_path),
-          year: tv.first_air_date.split("-")[0],
-          seasons: tv.seasons,
-          tmdbid: tv.id,
-        };
-      }),
+      shows.results.map(async TvResult => transformToShow(TvResult.id)),
     );
     return shows_list;
   } catch (error) {

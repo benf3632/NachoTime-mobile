@@ -15,6 +15,7 @@ import colors from "@app/constants/colors";
 
 // helpers
 import { queryMovies } from "@app/helpers/yts";
+import { queryShows } from "@app/helpers/tmbd";
 
 const SearchScreen = ({ navigation }) => {
   const [searchInput, onSearchInputChange] = useState("");
@@ -30,6 +31,8 @@ const SearchScreen = ({ navigation }) => {
       searchResults = [];
     } else if (searchShowType === 0) {
       searchResults = await queryMovies(searchInput, 1, 20);
+    } else if (searchShowType === 1) {
+      searchResults = await queryShows(searchInput, 1);
     } else {
       searchResults = [];
     }
@@ -38,7 +41,15 @@ const SearchScreen = ({ navigation }) => {
   };
 
   const handleDetailsCardPressed = details => {
-    navigation.navigate("Details", { details });
+    let showType;
+    if (searchShowType === 0) {
+      showType = "movie";
+    } else if (searchShowType === 1) {
+      showType = "tv";
+    } else {
+      showType = "";
+    }
+    navigation.navigate("Details", { details, showType });
   };
 
   useEffect(() => {
