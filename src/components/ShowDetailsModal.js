@@ -44,6 +44,7 @@ import {
   generateYTSMagnetURL,
   getInfoHashFromMagnet,
 } from "@app/utils/torrent";
+import { min } from "react-native-reanimated";
 
 const DetailsModal = ({ route }) => {
   const { details, showType } = route.params;
@@ -159,7 +160,6 @@ const DetailsModal = ({ route }) => {
   );
 
   const addEpisodeToDownload = (episode, torrent, downloadType) => {
-    console.log(details);
     const showDetails = {
       tmdbid: details.imdbid,
       imdb_code: details.imdb_code,
@@ -212,7 +212,6 @@ const DetailsModal = ({ route }) => {
     if (showType === "tv") {
       getEpisodes();
     }
-    // setSelectedQuality(null);
   }, [details]);
 
   return (
@@ -229,28 +228,15 @@ const DetailsModal = ({ route }) => {
         data={episodes.length !== 0 ? episodes[selectedSeason].episodes : []}
         style={styles.showModalScrollView}
         renderItem={({ item }) => {
-          // console.log(item);
           return (
-            <View
-              style={{
-                width: "100%",
-                paddingHorizontal: "5%",
-                marginVertical: 5,
-              }}>
-              <View style={{ flexDirection: "row" }}>
+            <View style={styles.episodeCardContainer}>
+              <View style={styles.epsiodeCardHeader}>
                 <TouchableOpacity
                   onPress={() => getEpisodeTorrent(item, "cache")}>
                   <ImageBackground
                     source={{ uri: item.still_path }}
-                    style={{ width: 125, height: 70 }}>
-                    <View
-                      style={{
-                        backgroundColor: "#0000002f",
-                        height: "100%",
-                        width: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}>
+                    style={styles.episodeStillImage}>
+                    <View style={styles.episodePlayBtnContainer}>
                       <Ionicons
                         name="play-circle-outline"
                         size={40}
@@ -259,16 +245,28 @@ const DetailsModal = ({ route }) => {
                     </View>
                   </ImageBackground>
                 </TouchableOpacity>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    flexShrink: 1,
-                    marginLeft: 5,
-                  }}>
-                  <Text style={{ color: colors.primary, flexShrink: 1 }}>
-                    {item.episode_number}. {item.name}
-                  </Text>
+                <View style={styles.episodeDetailsContainer}>
+                  <View style={styles.episodeDetails}>
+                    <Text style={{ color: colors.primary, flexShrink: 1 }}>
+                      {item.episode_number}. {item.name}
+                    </Text>
+                  </View>
+                  <View style={styles.episodeDetails}>
+                    {item.runtime && (
+                      <Text style={{ color: colors.background_accent }}>
+                        {item.runtime} min
+                      </Text>
+                    )}
+                    <TouchableOpacity
+                      style={{ marginLeft: 5 }}
+                      onPress={() => getEpisodeTorrent(item, "download")}>
+                      <AntDesign
+                        name="download"
+                        size={15}
+                        color={colors.accent}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
               <Text
@@ -457,6 +455,34 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     overflow: "hidden",
+  },
+  episodeCardContainer: {
+    width: "100%",
+    paddingHorizontal: "5%",
+    marginVertical: 5,
+  },
+  epsiodeCardHeader: {
+    flexDirection: "row",
+  },
+  episodeStillImage: {
+    width: 125,
+    height: 70,
+  },
+  episodePlayBtnContainer: {
+    backgroundColor: "#0000002f",
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  episodeDetailsContainer: {
+    flexShrink: 1,
+  },
+  episodeDetails: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexShrink: 1,
+    marginLeft: 5,
   },
   showImageBackground: {
     height: 400,
