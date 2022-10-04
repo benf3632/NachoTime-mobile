@@ -14,7 +14,7 @@ import colors from "@app/constants/colors";
 // actions
 import {
   getPopluarTVShows,
-  //   getNextPage,
+  getMorePopularTVShows,
 } from "@app/slices/showsSlice";
 
 // selectors
@@ -39,8 +39,8 @@ const TVShowsList = ({ onSelect }) => {
   //   //   const latestMovies = useSelector(selectLatestMovies);
   const loadedInitialState = useSelector(selectLoadedInitialState);
 
-  const fetchNextPage = async filter => {
-    await dispatch(getNextPage(filter));
+  const fetchMorePopularTVShows = async filter => {
+    await dispatch(getMorePopularTVShows(filter));
   };
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const TVShowsList = ({ onSelect }) => {
           }
           ListFooterComponent={popluarTVShows.loading ? <LoadingCard /> : <></>}
           onEndReachedThreshold={0.5}
-          //   onEndReached={() => fetchNextPage("download_count")}
+          onEndReached={() => fetchMorePopularTVShows()}
           renderItem={({ item }) => (
             <ShowDetailsCard
               style={{ marginRight: 10 }}

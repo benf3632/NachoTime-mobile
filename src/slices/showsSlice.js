@@ -28,6 +28,15 @@ export const getPopluarTVShows = createAsyncThunk(
   },
 );
 
+export const getMorePopularTVShows = createAsyncThunk(
+  "shows/getMorePopularTVShows",
+  async (_payload, { getState }) => {
+    const nextPage = getState().shows.popular.page + 1;
+    const shows = await fetchPopularTVShows(nextPage);
+    return shows;
+  },
+);
+
 export const showsSlice = createSlice({
   name: "shows",
   initialState,
@@ -46,6 +55,21 @@ export const showsSlice = createSlice({
         state.loadedInitialState = true;
       })
       .addCase(getPopluarTVShows.rejected, (state, action) => {
+        state.popular.loading = false;
+        state.popular.error = action.error.message;
+      })
+      .addCase(getMorePopularTVShows.pending, (state, action) => {
+        state.popular.loading = true;
+        state.popular.error = "";
+      })
+      .addCase(getMorePopularTVShows.fulfilled, (state, action) => {
+        state.popular.loading = false;
+        state.popular.shows = state.popular.shows.concat(action.payload);
+        state.popular.page = state.popular.page + 1;
+        if (action.payload.length === 0) state.popular.hasMore = false;
+        state.loadedInitialState = true;
+      })
+      .addCase(getMorePopularTVShows.rejected, (state, action) => {
         state.popular.loading = false;
         state.popular.error = action.error.message;
       });
