@@ -12,7 +12,7 @@ import Video, { TextTrackType } from "react-native-video";
 import { useNavigation } from "@react-navigation/native";
 import Orientation from "react-native-orientation";
 import Slider from "@react-native-community/slider";
-import { addListener } from "react-native-torrent-stream";
+import { addListener, getStreamUrl } from "react-native-torrent-stream";
 import { useDispatch, useSelector } from "react-redux";
 
 // icons
@@ -51,10 +51,17 @@ const VideoScreen = ({ route }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isSliding, setIsSliding] = useState(false);
+  const [isVideoBuffering, setIsVideoBuffering] = useState(false);
 
   const controlsTimeout = useRef(null);
 
   const controlsViewAnimation = useRef(new Animated.Value(0)).current;
+
+  const isVideoLoading =
+    videoSource === "background" ||
+    videoSource === "" ||
+    buffering ||
+    isVideoBuffering;
 
   const handleVideoPlayerPressed = () => {
     if (showControls) {
@@ -85,6 +92,9 @@ const VideoScreen = ({ route }) => {
     console.log(params);
     setDuration(params.duration);
     setPlayerPaused(true);
+    setTimeout(() => {
+      setPlayerPaused(false);
+    }, 100);
   };
 
   const onVideoProgress = params => {
@@ -147,6 +157,15 @@ const VideoScreen = ({ route }) => {
     setCurrentTime(seek.currentTime);
   };
 
+  const onBuffer = buffer => {
+    if (buffer.isBuffering) {
+      clearControlsTimeout();
+    } else {
+      resetControlsTimeout();
+    }
+    setIsVideoBuffering(buffer.isBuffering);
+  };
+
   useEffect(() => {
     const unsubscribeBeforeRemove = navigation.addListener(
       "beforeRemove",
@@ -163,18 +182,38 @@ const VideoScreen = ({ route }) => {
         setPlayerPaused(false);
       }
     });
+    const torrentServerReadyListener = addListener("serverReady", params => {
+      console.log(params);
+      if (params.url) {
+        setVideoSource(params.url);
+      }
+    });
     Orientation.lockToLandscape();
     player.current.presentFullscreenPlayer();
     startControlsDisplayAnimation();
     return () => {
       unsubscribeBeforeRemove();
       torrentStatusListener.remove();
+      torrentServerReadyListener.remove();
     };
   }, []);
 
+  const getTorrentStreamUrl = async () => {
+    const url = await getStreamUrl();
+    console.log(url);
+    if (url) {
+      setVideoSource(url);
+    }
+  };
+
   useEffect(() => {
-    setVideoSource(currentDownload?.torrentDetails.path || "background");
-  }, [currentDownload.torrentDetails.path]);
+    console.log(currentDownload.torrentDetails.progress);
+    if (currentDownload.torrentDetails.progress === "100.0") {
+      setVideoSource(currentDownload?.torrentDetails.path || "background");
+    } else {
+      getTorrentStreamUrl();
+    }
+  }, []);
 
   return (
     <View style={{ height: "100%", width: "100%" }}>
@@ -186,6 +225,7 @@ const VideoScreen = ({ route }) => {
           ref={player}
           onLoad={onVideoLoad}
           onSeek={onSeek}
+          onBuffer={onBuffer}
           onProgress={onVideoProgress}
           volume={1.0}
           // textTracks={[
@@ -243,9 +283,7 @@ const VideoScreen = ({ route }) => {
                   color="white"
                 />
               </TouchableOpacity>
-              {videoSource === "background" ||
-              videoSource === "" ||
-              buffering ? (
+              {isVideoLoading ? (
                 <ActivityIndicator size="large" color={colors.primary} />
               ) : (
                 <TouchableOpacity onPress={togglePlayPause}>

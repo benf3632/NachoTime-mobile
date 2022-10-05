@@ -86,7 +86,10 @@ export const downloadsSlice = createSlice({
     },
     startDownload(state, action) {
       const key = action.payload.key;
-      if (state.all_downloads[key]) {
+      if (
+        state.all_downloads[key] &&
+        state.all_downloads[key].torrentDetails.progress !== "100.0"
+      ) {
         if (state.current_download) {
           stopTorrent();
         }

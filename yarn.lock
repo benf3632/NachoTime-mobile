@@ -8889,14 +8889,14 @@ __metadata:
   linkType: hard
 
 "react-native-torrent-stream@git@github.com:benf3632/react-native-torrent-stream.git":
-  version: 0.1.0
-  resolution: "react-native-torrent-stream@git@github.com:benf3632/react-native-torrent-stream.git#commit=f9023fabc3ccb280823cf7fba625726bf54bce6a"
+  version: 0.1.1
+  resolution: "react-native-torrent-stream@git@github.com:benf3632/react-native-torrent-stream.git#commit=adaa45fa136781301146dfef67ebf72cde7d312c"
   dependencies:
     ts-node: ^10.9.1
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 9997c7fbe4df652db6a3334cb970aece500c4d811d7398b5c4ca7ae2a0f11ffb9fb6dffc481645e86c6afdf06bf05b77bc0f2bfead96f5f7fc07f153fc2a9af2
+  checksum: 9aa60d5d28186e551de90bbb72b722d215d31a86a3253da67e33245a26134921c6fd16dbe838191727d2b768ef05a0e2b66109cf2fe31fc93ca9f9c6ebbaaef1
   languageName: node
   linkType: hard
 
