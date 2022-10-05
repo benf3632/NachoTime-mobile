@@ -8,6 +8,8 @@ import {
   FlatList,
   Image,
   ToastAndroid,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
@@ -15,7 +17,7 @@ import { useDispatch } from "react-redux";
 import SelectDropdown from "react-native-select-dropdown";
 import { useNavigation } from "@react-navigation/native";
 import { FloatingAction } from "react-native-floating-action";
-import { format } from "bytes";
+import bytes, { format } from "bytes";
 
 // helpers
 import {
@@ -59,6 +61,10 @@ const DetailsModal = ({ route }) => {
   const [selectedSeason, setSelectedSeason] = useState(0);
   const [isScrollToTopButtonVisible, setIsScrollToTopButtonVisible] =
     useState(false);
+  const [isTorrentListModalVisible, setIsTorrentListModalVisible] =
+    useState(false);
+  const [torrentsList, setTorrentsList] = useState([]);
+  const [selectedEpisodeDetails, setSelectedEpisodeDetails] = useState(null);
   const listRef = useRef(null);
 
   const getShowBackdropURL = async () => {
@@ -128,11 +134,16 @@ const DetailsModal = ({ route }) => {
 
   const getEpisodeTorrent = useCallback(
     async (episode, downloadType) => {
-      const torrents = await findEpisodeTorrent(
+      let torrents = await findEpisodeTorrent(
         details.title,
         episodes[selectedSeason].season_number.toString(),
         episode.episode_number.toString(),
       );
+      torrents = torrents.sort((a, b) => b.seeds > a.seeds);
+      setTorrentsList(torrents);
+      setSelectedEpisodeDetails({ episode, downloadType });
+      setIsTorrentListModalVisible(true);
+      return;
       let bestTorrent = torrents.find(torrent =>
         torrent.title.includes(selectedQuality),
       );
@@ -436,6 +447,56 @@ const DetailsModal = ({ route }) => {
           listRef.current.scrollToOffset({ offset: 0, animated: true });
         }}
       />
+      <Modal
+        visible={isTorrentListModalVisible}
+        transparent
+        onRequestClose={() => {
+          setIsTorrentListModalVisible(false);
+        }}
+        animationType="fade">
+        <TouchableWithoutFeedback
+          touchSoundDisabled
+          onPress={() => {
+            setIsTorrentListModalVisible(false);
+          }}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "#0000006f",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <View
+              style={{
+                width: "85%",
+                height: "60%",
+                backgroundColor: colors.background_accent,
+              }}>
+              <FlatList
+                data={torrentsList}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      addEpisodeToDownload(
+                        selectedEpisodeDetails.episode,
+                        item,
+                        selectedEpisodeDetails.downloadType,
+                      );
+                      setIsTorrentListModalVisible(false);
+                    }}>
+                    <View style={{ flexShrink: 1, padding: 5 }}>
+                      <Text style={{ color: "white" }}>{item.title}</Text>
+                      <Text style={{ color: "#696969" }}>
+                        seeds: {item.seeds} size: {bytes.format(item.size)}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };
