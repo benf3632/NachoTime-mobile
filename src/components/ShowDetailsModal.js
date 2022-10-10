@@ -10,6 +10,7 @@ import {
   ToastAndroid,
   Modal,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ReadMore from "@fawazahmed/react-native-read-more";
@@ -46,7 +47,6 @@ import {
   generateYTSMagnetURL,
   getInfoHashFromMagnet,
 } from "@app/utils/torrent";
-import { min } from "react-native-reanimated";
 
 const DetailsModal = ({ route }) => {
   const { details, showType } = route.params;
@@ -65,6 +65,7 @@ const DetailsModal = ({ route }) => {
     useState(false);
   const [torrentsList, setTorrentsList] = useState([]);
   const [selectedEpisodeDetails, setSelectedEpisodeDetails] = useState(null);
+  const [isTorrentsLoading, setIsTorrentsLoading] = useState(false);
   const listRef = useRef(null);
 
   const getShowBackdropURL = async () => {
@@ -134,6 +135,8 @@ const DetailsModal = ({ route }) => {
 
   const getEpisodeTorrent = useCallback(
     async (episode, downloadType) => {
+      setIsTorrentListModalVisible(true);
+      setIsTorrentsLoading(true);
       let torrents = await findEpisodeTorrent(
         details.title,
         episodes[selectedSeason].season_number.toString(),
@@ -142,7 +145,7 @@ const DetailsModal = ({ route }) => {
       torrents = torrents.sort((a, b) => b.seeds > a.seeds);
       setTorrentsList(torrents);
       setSelectedEpisodeDetails({ episode, downloadType });
-      setIsTorrentListModalVisible(true);
+      setIsTorrentsLoading(false);
       return;
       let bestTorrent = torrents.find(torrent =>
         torrent.title.includes(selectedQuality),
@@ -472,27 +475,41 @@ const DetailsModal = ({ route }) => {
                 height: "60%",
                 backgroundColor: colors.background_accent,
               }}>
-              <FlatList
-                data={torrentsList}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      addEpisodeToDownload(
-                        selectedEpisodeDetails.episode,
-                        item,
-                        selectedEpisodeDetails.downloadType,
-                      );
-                      setIsTorrentListModalVisible(false);
-                    }}>
-                    <View style={{ flexShrink: 1, padding: 5 }}>
-                      <Text style={{ color: "white" }}>{item.title}</Text>
-                      <Text style={{ color: "#696969" }}>
-                        seeds: {item.seeds} size: {bytes.format(item.size)}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              />
+              {isTorrentsLoading ? (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}>
+                  <ActivityIndicator color={colors.primary} size={30} />
+                  <Text style={{ color: colors.primary }}>
+                    Loading Torrents...
+                  </Text>
+                </View>
+              ) : (
+                <FlatList
+                  data={torrentsList}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        addEpisodeToDownload(
+                          selectedEpisodeDetails.episode,
+                          item,
+                          selectedEpisodeDetails.downloadType,
+                        );
+                        setIsTorrentListModalVisible(false);
+                      }}>
+                      <View style={{ flexShrink: 1, padding: 5 }}>
+                        <Text style={{ color: "white" }}>{item.title}</Text>
+                        <Text style={{ color: "#696969" }}>
+                          seeds: {item.seeds} size: {bytes.format(item.size)}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+              )}
             </View>
           </View>
         </TouchableWithoutFeedback>
